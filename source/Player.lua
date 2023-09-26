@@ -125,36 +125,32 @@ function Player:render()
     love.graphics.draw(SpriteSheet['fish'], Sprites['player'][self.frame], self.x, self.y)
 
     -- render fishing line
-    if self.area == 'start' then
-        if self.cast then
-            love.graphics.setColor(1, 1, 1, 1)
-            love.graphics.setLineWidth(1)
-            if self.frame == PLAYER_FISH_LEFT then
-                -- line
-                love.graphics.line(self.x + POLE_TIP_LEFT[1], self.y + POLE_TIP_LEFT[2], (self.x + POLE_TIP_LEFT[1]) - self.power, self.y + 64)
-                -- bobber
-                love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], (self.x + POLE_TIP_LEFT[1]) - self.power - 4, self.y + 64)
-            elseif self.frame == PLAYER_FISH_RIGHT then
-                -- line
-                love.graphics.line(self.x + POLE_TIP_RIGHT[1], self.y + POLE_TIP_RIGHT[2], (self.x + POLE_TIP_RIGHT[1]) + self.power, self.y + 64)
-                -- bobber
-                love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], (self.x + POLE_TIP_RIGHT[1]) + self.power - 4, self.y + 64)
-            elseif self.frame == PLAYER_FISH_UP then
-                -- line
-                love.graphics.line(self.x + POLE_TIP_UP[1], self.y + POLE_TIP_UP[2], self.x + POLE_TIP_UP[1], (self.y + POLE_TIP_UP[2]) - self.power)
-                -- bobber
-                love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], self.x + POLE_TIP_UP[1] - 4, (self.y + POLE_TIP_UP[2]) - self.power)
-                -- draw player last so pleyer is on top of the line and bobber
-                love.graphics.draw(SpriteSheet['fish'], Sprites['player'][self.frame], self.x, self.y)
-            elseif self.frame == PLAYER_FISH_DOWN then
-                -- line
-                love.graphics.line(self.x + POLE_TIP_DOWN[1], self.y + POLE_TIP_DOWN[2], self.x + 32, (self.y + POLE_TIP_DOWN[2]) + self.power)
-                -- bobber
-                love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], self.x + 32 - 4, (self.y + POLE_TIP_DOWN[2]) + self.power)
-            end
+    if self.cast then
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.setLineWidth(1)
+        if self.frame == PLAYER_FISH_LEFT then
+            -- line
+            love.graphics.line(self.x + POLE_TIP_LEFT[1], self.y + POLE_TIP_LEFT[2], (self.x + POLE_TIP_LEFT[1]) - self.power, self.y + 64)
+            -- bobber
+            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], (self.x + POLE_TIP_LEFT[1]) - self.power - 4, self.y + 64)
+        elseif self.frame == PLAYER_FISH_RIGHT then
+            -- line
+            love.graphics.line(self.x + POLE_TIP_RIGHT[1], self.y + POLE_TIP_RIGHT[2], (self.x + POLE_TIP_RIGHT[1]) + self.power, self.y + 64)
+            -- bobber
+            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], (self.x + POLE_TIP_RIGHT[1]) + self.power - 4, self.y + 64)
+        elseif self.frame == PLAYER_FISH_UP then
+            -- line
+            love.graphics.line(self.x + POLE_TIP_UP[1], self.y + POLE_TIP_UP[2], self.x + POLE_TIP_UP[1], (self.y + POLE_TIP_UP[2]) - self.power)
+            -- bobber
+            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], self.x + POLE_TIP_UP[1] - 4, (self.y + POLE_TIP_UP[2]) - self.power)
+            -- draw player last so pleyer is on top of the line and bobber
+            love.graphics.draw(SpriteSheet['fish'], Sprites['player'][self.frame], self.x, self.y)
+        elseif self.frame == PLAYER_FISH_DOWN then
+            -- line
+            love.graphics.line(self.x + POLE_TIP_DOWN[1], self.y + POLE_TIP_DOWN[2], self.x + 32, (self.y + POLE_TIP_DOWN[2]) + self.power)
+            -- bobber
+            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], self.x + 32 - 4, (self.y + POLE_TIP_DOWN[2]) + self.power)
         end
-    elseif self.area == 'beach' then
-        return
     end
 
     -- render fishing mechanic

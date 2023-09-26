@@ -167,7 +167,7 @@ function GetSigns(SpriteSheet)
     local x = 48
     local y = 32
 
-    for column = 1, 2 do
+    for column = 1, 4 do
         table.insert(signs, love.graphics.newQuad(
             x, y, 32, 32, SpriteSheet:getDimensions()
         ))
@@ -302,5 +302,3 @@ function GetBeach(SpriteSheet)
 
     return beach
 end
-
-

@@ -45,7 +45,7 @@ function PlayerFishing:update(dt)
         end
         if self.player.fish_on == true then
 
-            self.fish = CatchFish(self.player.inventory['lure']).fish
+            self.fish = CatchFish(self.player.area).fish
 
             -- fishing mechanic
             if love.mouse.isDown(2) then

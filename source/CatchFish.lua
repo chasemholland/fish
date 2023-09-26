@@ -4,46 +4,41 @@
 
 CatchFish = Class{}
 
-function CatchFish:init(lure)
+function CatchFish:init(area)
 
-    self.lure = lure
-    self.fish = self:fish(self.lure)
+    self.fish = self:fish(area)
 
 end
 
-function CatchFish:fish(lure)
+function CatchFish:fish(area)
 
     local fish = 1
 
-    if lure == 'basic' then
+    if area == 'start' then
 
         for i = 1, 3 do
 
-            local number = math.random(1, 2) == 1 and true or false
+            local number = math.random(1, 4) == 1 and true or false
             if number == true then
                 fish = fish + 1
             end
 
         end
 
-    elseif lure == 'novice' then
+    elseif area == 'river' then
 
-        local fish_level = math.random(1, 2)
-        if fish_level == 1 then
-            fish = fish
-        elseif fish_level == 2 then
-            fish = 5
-        end
+        fish = 5
 
         for i = 1, 3 do
 
-            local number = math.random(1, 2) == 1 and true or false
+            local number = math.random(1, 4) == 1 and true or false
             if number == true then
                 fish = fish + 1
             end
         end
 
-    elseif lure == 'amateur' then
+--[[
+    elseif area == 'beach' then
 
         local fish_level = math.random(1, 3)
         if fish_level == 1 then
@@ -61,23 +56,20 @@ function CatchFish:fish(lure)
                 fish = fish + 1
             end
         end
+        ]]
 
-    elseif lure == 'advanced' then
+    elseif area == 'beach' then
 
-        local fish_level = math.random(1, 4)
+        local fish_level = math.random(1, 2)
         if fish_level == 1 then
-            fish = fish
-        elseif fish_level == 2 then
-            fish = 5
-        elseif fish_level == 3 then
             fish = 9
-        elseif fish_level == 4 then
+        elseif fish_level == 2 then
             fish = 13
         end
 
         for i = 1, 3 do
 
-            local number = math.random(1, 2) == 1 and true or false
+            local number = math.random(1, 4) == 1 and true or false
             if number == true then
                 fish = fish + 1
             end
@@ -87,6 +79,3 @@ function CatchFish:fish(lure)
 
     return fish
 end
-
-
-            

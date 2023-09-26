@@ -27,15 +27,21 @@ end
 
 function Play:update(dt)
     
-    -- check area
+    -- render currect area
     if self.player.area == 'start' and self.current_world == 'beach' then
-        self.world = GenerateBeach()
-        self.current_world = 'beach'
-    elseif self.player.area == 'beach' and self.current_world == 'start' then
         self.world = GenerateWorld()
         self.current_world = 'start'
+    elseif self.player.area == 'start' and self.current_world == 'river' then
+        self.world = GenerateWorld()
+        self.current_world = 'start'
+    elseif self.player.area == 'beach' and self.current_world == 'start' then
+        self.world = GenerateBeach()
+        self.current_world = 'beach'
+    elseif self.player.area == 'river' and self.current_world == 'start' then
+        self.world = GenerateRiver()
+        self.current_world = 'river'
     end
-    
+
     -- update the world
     self.world:update(dt)
 

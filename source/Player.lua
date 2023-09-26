@@ -39,7 +39,7 @@ function Player:init(def)
             ['amateur'] = false,
             ['advanced'] = false
         },
-        ['money'] = 0,
+        ['money'] = 50000,
         ['fish'] = {
             [1] = nil,
             [2] = nil,

@@ -174,5 +174,8 @@ function GenerateBeach:render()
         love.graphics.draw(SpriteSheet['beach'], Sprites['beach'][BEACH_PATH[i]], GAME_WIDTH / 2 - 16, y)
         i = 6
     end
+
+    -- sign
+    love.graphics.draw(SpriteSheet['ground'], Sprites['signs'][4], 64, GAME_HEIGHT / 2 + 16)
     
 end

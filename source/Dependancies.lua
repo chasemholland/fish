@@ -29,6 +29,9 @@ require 'source/GenerateWorld'
 -- generate beach
 require 'source/GenerateBeach'
 
+-- generate river
+require 'source/GenerateRiver'
+
 -- player
 require 'source/player_def'
 require 'source/Player'

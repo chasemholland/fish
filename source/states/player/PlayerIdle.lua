@@ -35,7 +35,7 @@ function PlayerIdle:update(dt)
     -- enter shop if button pressed
     if love.mouse.pressed(1) and mouseX >= GAME_WIDTH - 82 and mouseX <= GAME_WIDTH - 2 and mouseY >= 2 and mouseY <= 34 then
         -- pass the fifth tutorial
-        if self.player.tutorial[5] == false then
+        if self.player.tutorial[5] == false and self.player.tutorial[1] == true and self.player.tutorial[2] == true and self.player.tutorial[3] == true and self.player.tutorial[4] == true then
             self.player.tutorial[5] = true
         end
         self.player.shopping = true
@@ -46,21 +46,21 @@ function PlayerIdle:update(dt)
     -- see achievements
     elseif love.mouse.pressed(1) and mouseX >= GAME_WIDTH - 46 and mouseX <= GAME_WIDTH - 2 and mouseY >= 70 and mouseY <= 118 then
         -- pass the sixth and final tutorial
-        if self.player.tutorial[6] == false then
+        if self.player.tutorial[6] == false and self.player.tutorial[1] == true and self.player.tutorial[2] == true and self.player.tutorial[3] == true and self.player.tutorial[4] == true and self.player.tutorial[5] == true then
             self.player.tutorial[6] = true
         end
         self.player:changeState('achievement')
     -- begin casting if holding left mouse button down
     elseif love.mouse.isDown(1) and mouseX < GAME_WIDTH - 82 and mouseY < 68 and self.timer > 1 then
         -- pass the second tutorial
-        if self.player.tutorial[2] == false then
+        if self.player.tutorial[2] == false and self.player.tutorial[1] == true then
             self.player.tutorial[2] = true
         end
         self.player.casting = true
         self.player:changeState('casting')
     elseif love.mouse.isDown(1) and mouseY > 68 and self.timer > 1 then
         -- pass the second tutorial
-        if self.player.tutorial[2] == false then
+        if self.player.tutorial[2] == false and self.player.tutorial[1] == true then
             self.player.tutorial[2] = true
         end
         self.player.casting = true
@@ -82,7 +82,7 @@ end
 function PlayerIdle:sellFish()
 
     -- pass the fourth tutorial
-    if self.player.tutorial[4] == false then
+    if self.player.tutorial[4] == false and self.player.tutorial[1] == true and self.player.tutorial[2] == true and self.player.tutorial[3] == true then
         self.player.tutorial[4] = true
     end
 

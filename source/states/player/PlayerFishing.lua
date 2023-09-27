@@ -129,7 +129,7 @@ function PlayerFishing:update(dt)
                 self.player.fish_on = false
 
                 -- pass the third tutorial
-                if self.player.tutorial[3] == false then
+                if self.player.tutorial[3] == false and self.player.tutorial[1] == true and self.player.tutorial[2] == true then
                     self.player.tutorial[3] = true
                 end
 

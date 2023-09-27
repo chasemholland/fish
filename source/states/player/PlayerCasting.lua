@@ -82,7 +82,7 @@ function PlayerCasting:Cast()
             self.player.frame = PLAYER_FISH_DOWN
 
             -- check if cast was on a water tile
-            if ((self.player.y + POLE_TIP_DOWN[2]) + self.player.power) <= WATER_TOP then
+            if ((self.player.y + POLE_TIP_DOWN[2]) + self.player.power) <= WATER_TOP or ((self.player.y + POLE_TIP_DOWN[2]) + self.player.power) >= GAME_HEIGHT - 26 then
                 self.player:changeState('idle')
             else
                 self.player:changeState('fishing')

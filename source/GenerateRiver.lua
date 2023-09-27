@@ -22,11 +22,11 @@ function GenerateRiver:init()
     self.ground = {}
     -- fill ground table
     for y = 16, GAME_HEIGHT - 32, 16 do
-        for x = 16, 96, 16 do
+        for x = 32, 64, 16 do
             table.insert(self.ground, math.random(1, 2))
         end
 
-        for x = GAME_WIDTH / 2, GAME_WIDTH - 32, 16 do
+        for x = GAME_WIDTH / 2 + 16, GAME_WIDTH - 32, 16 do
             table.insert(self.ground, math.random(1, 2))
         end
     end
@@ -60,14 +60,14 @@ function GenerateRiver:render()
     -- ground
     local i = 1
     for y = 16, GAME_HEIGHT - 32, 16 do
-        for x = 16, 96, 16 do
+        for x = 32, 64, 16 do
             love.graphics.draw(SpriteSheet['ground'], Sprites['ground'][self.ground[i]], x, y)
             i = i + 1
         end
     end
 
     for y = 16, GAME_HEIGHT - 32, 16 do
-        for x = GAME_WIDTH / 2, GAME_WIDTH - 32, 16 do
+        for x = GAME_WIDTH / 2 + 16, GAME_WIDTH - 32, 16 do
             love.graphics.draw(SpriteSheet['ground'], Sprites['ground'][self.ground[i]], x, y)
             i = i + 1
         end
@@ -84,7 +84,7 @@ function GenerateRiver:render()
     end
     love.graphics.setColor(1, 1, 1, 1)
 
-    -- top edge
+    -- top wall
     for x = 16, 80, 16 do
         love.graphics.draw(SpriteSheet['ground'], Sprites['wall'][3], x, 0)
     end
@@ -92,7 +92,7 @@ function GenerateRiver:render()
         love.graphics.draw(SpriteSheet['ground'], Sprites['wall'][3], x, 0)
     end
 
-    -- bottom edge
+    -- bottom wall
     for x = 16, 80, 16 do
         love.graphics.draw(SpriteSheet['ground'], Sprites['wall'][10], x, GAME_HEIGHT - 16)
     end
@@ -100,10 +100,41 @@ function GenerateRiver:render()
         love.graphics.draw(SpriteSheet['ground'], Sprites['wall'][10], x, GAME_HEIGHT - 16)
     end
 
-    -- left and right edge
+    -- left and right wall
     for y = 16, GAME_HEIGHT - 32, 16 do
         love.graphics.draw(SpriteSheet['ground'], Sprites['wall'][1], 0, y)
         love.graphics.draw(SpriteSheet['ground'], Sprites['wall'][2], GAME_WIDTH - 16, y)
+    end
+
+    -- top edge
+    for x = 32, 64, 16 do
+        love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][2], x, 16)
+    end
+    for x = GAME_WIDTH / 2 + 16, GAME_WIDTH - 48, 16 do
+        love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][2], x, 16)
+    end
+
+    -- bottom edge
+    for x = 32, 64, 16 do
+        love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][6], x, GAME_HEIGHT - 32)
+    end
+    for x = GAME_WIDTH / 2 + 16, GAME_WIDTH - 48, 16 do
+        love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][6], x, GAME_HEIGHT - 32)
+    end
+
+    -- left and right edge
+    for y = 32, GAME_HEIGHT - 48, 16 do
+        love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][8], 16, y)
+        love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][4], GAME_WIDTH - 32, y)
+    end
+
+    -- corner edges 1, 3, 5, 7
+    local i = 1
+    for y = 16, GAME_HEIGHT - 32, GAME_HEIGHT - 48 do
+        for x = 16, GAME_WIDTH - 32, GAME_WIDTH - 48 do
+            love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][i], x, y)
+            i = i + 2
+        end
     end
 
     -- corners 6, 7, 13, 14
@@ -114,6 +145,23 @@ function GenerateRiver:render()
             i = i + 1
         end
         i = 13
+    end
+
+    -- waters edge left and right
+    for y = 32, GAME_HEIGHT - 48, 16 do
+        love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][4], 80, y)
+        love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][8], GAME_WIDTH / 2, y)
+    end
+
+
+    -- waters edge corners 3, 1, 7, 5
+    local i = 3
+    for y = 16, GAME_HEIGHT - 32, GAME_HEIGHT - 48 do
+        for x = 80, GAME_WIDTH / 2, (GAME_WIDTH / 2 - 80) do
+            love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][i], x, y)
+            i = i - 2
+        end
+        i = 7
     end
 
     -- path top

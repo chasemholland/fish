@@ -2,6 +2,10 @@ Play = Class{__includes = Base}
 
 function Play:init()
 
+end
+
+function Play:enter(params)
+
     -- set up world
     self.world = GenerateWorld()
 
@@ -9,7 +13,7 @@ function Play:init()
     self.current_world = 'start'
 
     -- initialize a player
-    self.player = Player()
+    self.player = params.player
 
     -- set up player state machine
     self.player.statemachine = SM {
@@ -22,6 +26,11 @@ function Play:init()
         ['achievement'] = function() return PlayerAchievement(self.player) end
     }
     self.player:changeState('idle')
+
+    -- flag to check for correct lure
+    self.check_lure = false
+    -- timer for how long to diplay usage message
+    self.timer = 0
 
 end
 
@@ -41,6 +50,26 @@ function Play:update(dt)
         self.world = GenerateRiver()
         self.current_world = 'river'
     end
+
+    -- check for correct lure in area
+    if self.player.casting then
+        if self.player.area == 'river' and self.player.inventory['lure'] == 'basic' then
+            self.check_lure = true
+        elseif self.player.area == 'beach' and self.player.inventory['lure'] == 'basic' or self.player.inventory['lure'] == 'novice' then
+            self.check_lure = true
+        else
+            self.check_lure = false
+        end
+    end
+
+    -- display message for short period of time
+    if self.check_lure and self.timer < 10 then
+        self:waitTimer(dt)
+    elseif self.timer > 10 then
+        self.timer = 0
+        self.check_lure = false
+    end
+
 
     -- update the world
     self.world:update(dt)
@@ -88,10 +117,16 @@ function Play:render()
 
         -- render cast power bar if casting
         if self.player.casting then
+            love.graphics.setLineWidth(2)
             love.graphics.setColor(1, 0, 0, 1)
             love.graphics.rectangle('fill', 16, GAME_HEIGHT - self.player.timer / 2, 8, self.player.timer / 2, 4)
             love.graphics.setColor(1, 1, 1, 1)
             love.graphics.rectangle('line', 16, GAME_HEIGHT - self.player.cast_max / 2, 8, self.player.cast_max / 2, 6)
+        end
+
+        -- render usage for area
+        if self.check_lure then
+            self:drawUsage(self.player.area)
         end
 
         -- render fish caught in inventory
@@ -341,5 +376,28 @@ function Play:drawIntro()
         love.graphics.printf("THE  GOAL  OF  THE  GAME  IS  TO  CATCH  ONE  OF  EVERY  DIFFERENT  FISH.  CLICK  ON  THE  TROPHY  TO  SEE  YOUR  PROGRESS.", 20, 10, 150, 'center')
 
     end
+
+end
+
+function Play:drawUsage(area)
+
+    if area == 'river' then
+        love.graphics.setColor(1, 1, 1, 180 / 255)
+        love.graphics.setFont(Fonts['x-sm'])
+        love.graphics.draw(SpriteSheet['title'], Sprites['title'][1], 0, 0, 0, 0.5, 0.38)
+        love.graphics.setColor(0, 0, 0, 180 / 255)
+        love.graphics.printf("YOU  MUST  OWN  A  NOVICE  OR  BETTER  LURE  TO  FISH  AT  THE  RIVER", 20, 10, 150, 'center')
+    elseif area == 'beach' then
+        love.graphics.setColor(1, 1, 1, 180 / 255)
+        love.graphics.setFont(Fonts['x-sm'])
+        love.graphics.draw(SpriteSheet['title'], Sprites['title'][1], 0, 0, 0, 0.5, 0.38)
+        love.graphics.setColor(0, 0, 0, 180 / 255)
+        love.graphics.printf("YOU  MUST  OWN  A  AMATEUR  OR  BETTER  LURE  TO  FISH  AT  THE  BEACH", 20, 10, 150, 'center')
+    end
+end
+
+function Play:waitTimer(dt)
+
+    self.timer = self.timer + dt * 2
 
 end

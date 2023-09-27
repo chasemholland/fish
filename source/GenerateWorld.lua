@@ -105,13 +105,18 @@ function GenerateWorld:render()
     end
 
     -- left walls
-    for y = 48, GAME_HEIGHT - 16, 16 do
+    for y = 48, GAME_HEIGHT - 32, 16 do
         love.graphics.draw(SpriteSheet['ground'], Sprites['wall'][LEFT_WALL[1]], 0, y)
     end
 
     -- right walls
-    for y = 48, GAME_HEIGHT - 16, 16 do
+    for y = 48, GAME_HEIGHT - 32, 16 do
         love.graphics.draw(SpriteSheet['ground'], Sprites['wall'][RIGHT_WALL[1]], GAME_WIDTH - 16, y)
+    end
+
+    -- bottom walls
+    for x = 16, GAME_WIDTH - 32, 16 do
+        love.graphics.draw(SpriteSheet['ground'], Sprites['wall'][BOTTOM_WALL[1]], x, GAME_HEIGHT - 16)
     end
 
     -- waters edge
@@ -134,14 +139,14 @@ function GenerateWorld:render()
         love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][2], x, 48)
     end
 
-    -- wall edge top corners
+    -- middle wall edge top corners
     local x = 16
     for i = 1, 3, 2 do
         love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][i], x, 48)
         x = (GAME_WIDTH - 32)
     end
 
-    -- wall edge bottom corners
+    -- middle wall edge bottom corners
     local x = 16
     for i = 5, 7, 2 do
         love.graphics.draw(SpriteSheet['ground'], Sprites['wall_ground'][i], x, GAME_HEIGHT / 2 - 16)
@@ -153,6 +158,13 @@ function GenerateWorld:render()
     -- top corners
     for i = 1, 2 do
         love.graphics.draw(SpriteSheet['ground'], Sprites['wall'][WALL_CORNER[i]], x, 32)
+        x = (GAME_WIDTH - 16)
+    end
+
+    -- bottom corners
+    local x = 0
+    for i = 3, 4 do
+        love.graphics.draw(SpriteSheet['ground'], Sprites['wall'][WALL_CORNER[i]], x, GAME_HEIGHT - 16)
         x = (GAME_WIDTH - 16)
     end
 

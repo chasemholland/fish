@@ -86,3 +86,8 @@ Fonts = {
     ['x-lg'] = love.graphics.newFont('fonts/RetroscapeRegular.ttf', 64),
     ['xx-lg'] = love.graphics.newFont('fonts/RetroscapeRegular.ttf', 128)
 }
+
+-- Sounds
+Sounds = {
+    ['background'] = love.audio.newSource("sounds/piano.wav", "static")
+}

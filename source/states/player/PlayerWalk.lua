@@ -75,7 +75,7 @@ function PlayerWalk:update(dt)
         -- if left wall transition
         if self.transition_direction == 'left' then 
             if self.player.area == 'start' then
-                self.player.x = self.player.x - PLAYER_WALK_SPEED * dt
+                self.player.x = self.player.x - math.floor(PLAYER_WALK_SPEED * dt)
                 -- player animation
                 self:changeAnimation(self.player.direction, dt)
                 if self.player.x + 32 <= 0 then
@@ -91,7 +91,7 @@ function PlayerWalk:update(dt)
                     self.transition = false
                 end
             elseif self.player.area == 'beach' then
-                self.player.x = self.player.x - PLAYER_WALK_SPEED * dt
+                self.player.x = self.player.x - math.floor(PLAYER_WALK_SPEED * dt)
                 -- player animation
                 self:changeAnimation(self.player.direction, dt)
                 if self.player.x + 32 <= 0 then
@@ -113,7 +113,7 @@ function PlayerWalk:update(dt)
 
             -- start to beach stransition
             if self.player.area == 'start' then
-                self.player.x = self.player.x + PLAYER_WALK_SPEED * dt
+                self.player.x = self.player.x + math.floor(PLAYER_WALK_SPEED * dt)
                 -- player animation
                 self:changeAnimation(self.player.direction, dt)
                 if self.player.x + 32 >= GAME_WIDTH then
@@ -129,7 +129,7 @@ function PlayerWalk:update(dt)
                     self.transition = false
                 end
             elseif self.player.area == 'river' then
-                self.player.x = self.player.x + PLAYER_WALK_SPEED * dt
+                self.player.x = self.player.x + math.floor(PLAYER_WALK_SPEED * dt)
                 -- player animation
                 self:changeAnimation(self.player.direction, dt)
                 if self.player.x + 32 >= GAME_WIDTH then
@@ -159,7 +159,7 @@ function PlayerWalk:walkStart(dt, direction)
             self.transition = true
             self.transition_direction = 'left'
         else
-            self.player.x = self.player.x - PLAYER_WALK_SPEED * dt
+            self.player.x = self.player.x - math.floor(PLAYER_WALK_SPEED * dt)
         end
     elseif direction == 'right' then
         if self:checkCollision('right_wall') then
@@ -168,19 +168,19 @@ function PlayerWalk:walkStart(dt, direction)
             self.transition = true
             self.transition_direction = 'right'
         else
-            self.player.x = self.player.x + PLAYER_WALK_SPEED * dt
+            self.player.x = self.player.x + math.floor(PLAYER_WALK_SPEED * dt)
         end
     elseif direction == 'up' then
         if self:checkCollision('top_wall') then
             self.player.y = 0
         else
-            self.player.y = self.player.y - PLAYER_WALK_SPEED * dt
+            self.player.y = self.player.y - math.floor(PLAYER_WALK_SPEED * dt)
         end
     elseif direction == 'down' then
         if self:checkCollision('bottom_wall') then
             self.player.y = WATER_TOP - 64
         else
-            self.player.y = self.player.y + PLAYER_WALK_SPEED * dt
+            self.player.y = self.player.y + math.floor(PLAYER_WALK_SPEED * dt)
         end
     end
 
@@ -196,25 +196,25 @@ function PlayerWalk:walkBeach(dt, direction)
             self.transition = true
             self.transition_direction = 'left'
         else
-            self.player.x = self.player.x - PLAYER_WALK_SPEED * dt
+            self.player.x = self.player.x - math.floor(PLAYER_WALK_SPEED * dt)
         end
     elseif direction == 'right' then
         if self:checkBeachCollision('right_wall') then
             self.player.x = GAME_WIDTH / 2 - 32
         else
-            self.player.x = self.player.x + PLAYER_WALK_SPEED * dt
+            self.player.x = self.player.x + math.floor(PLAYER_WALK_SPEED * dt)
         end
     elseif direction == 'up' then
         if self:checkBeachCollision('top_wall') then
             self.player.y = 0
         else
-            self.player.y = self.player.y - PLAYER_WALK_SPEED * dt
+            self.player.y = self.player.y - math.floor(PLAYER_WALK_SPEED * dt)
         end
     elseif direction == 'down' then
         if self:checkBeachCollision('bottom_wall') then
             self.player.y = GAME_HEIGHT - 72
         else
-            self.player.y = self.player.y + PLAYER_WALK_SPEED * dt
+            self.player.y = self.player.y + math.floor(PLAYER_WALK_SPEED * dt)
         end
     end
 end
@@ -226,7 +226,7 @@ function PlayerWalk:walkRiver(dt, direction)
         if self:checkRiverCollision('left_wall') then
             self.player.x = GAME_WIDTH / 2 - 16
         else
-            self.player.x = self.player.x - PLAYER_WALK_SPEED * dt
+            self.player.x = self.player.x - math.floor(PLAYER_WALK_SPEED * dt)
         end
     elseif direction == 'right' then
         if self:checkRiverCollision('right_wall') then
@@ -235,19 +235,19 @@ function PlayerWalk:walkRiver(dt, direction)
             self.transition = true
             self.transition_direction = 'right'
         else
-            self.player.x = self.player.x + PLAYER_WALK_SPEED * dt
+            self.player.x = self.player.x + math.floor(PLAYER_WALK_SPEED * dt)
         end
     elseif direction == 'up' then
         if self:checkRiverCollision('top_wall') then
             self.player.y = 0
         else
-            self.player.y = self.player.y - PLAYER_WALK_SPEED * dt
+            self.player.y = self.player.y - math.floor(PLAYER_WALK_SPEED * dt)
         end
     elseif direction == 'down' then
         if self:checkRiverCollision('bottom_wall') then
             self.player.y = GAME_HEIGHT - 80
         else
-            self.player.y = self.player.y + PLAYER_WALK_SPEED * dt
+            self.player.y = self.player.y + math.floor(PLAYER_WALK_SPEED * dt)
         end
     end
 end
@@ -447,7 +447,7 @@ end
 
 -- cycle through animations
 function PlayerWalk:changeAnimation(direction, dt)
-    self.timer = self.timer + dt*6
+    self.timer = self.timer + dt*8
 
     if self.timer > 1 then
         if direction == 'left' then

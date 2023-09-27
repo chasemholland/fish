@@ -38,6 +38,9 @@ function love.load()
     -- keep track of mouse input
     love.mouse.wasPressed = {}
 
+    Sounds['background']:setLooping(true)
+    Sounds['background']:play()
+
 end
 
 function love.resize(w, h)

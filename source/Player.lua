@@ -10,8 +10,8 @@ function Player:init(def)
     self.area = 'start'
 
     -- coordinates
-    self.x = 278
-    self.y = 32
+    self.x = GAME_WIDTH / 2 - 32
+    self.y = 56
 
     -- direction
     self.direction = 'down'
@@ -39,7 +39,7 @@ function Player:init(def)
             ['amateur'] = false,
             ['advanced'] = false
         },
-        ['money'] = 50000,
+        ['money'] = 0,
         ['fish'] = {
             [1] = nil,
             [2] = nil,

@@ -30,13 +30,24 @@ end
 
 function PlayerCasting:update(dt)
 
+    -- play casting sound
+    Sounds['cast_power']:setLooping(false)
+    Sounds['cast_power']:play()
+
     -- check to see if mouse was released
     if not love.mouse.isDown(1) and not self.player.cast then
+        -- stop casting sound
+        Sounds['cast_power']:stop()
+        -- play cast sound
+        Sounds['cast']:setLooping(false)
+        Sounds['cast']:play()
         -- cast the line
         self:Cast()
     -- set a max power
     elseif self.player.timer >= self.player.cast_max - 1 then
         self.player.power = math.floor(self.player.timer)
+        -- stop casting sound
+        Sounds['cast_power']:stop()
     -- increment power while holding down the mouse
     elseif not self.player.cast then
         self:getPower(dt)

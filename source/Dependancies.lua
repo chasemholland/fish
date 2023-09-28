@@ -89,5 +89,13 @@ Fonts = {
 
 -- Sounds
 Sounds = {
-    ['background'] = love.audio.newSource("sounds/piano.wav", "static")
+    ['background'] = love.audio.newSource('sounds/piano.wav', 'static'),
+    ['new_fish'] = love.audio.newSource('sounds/new_fish.wav', 'static'),
+    ['old_fish'] = love.audio.newSource('sounds/old_fish.wav', 'static'),
+    ['walk'] = love.audio.newSource('sounds/walk.wav', 'static'),
+    ['cast'] = love.audio.newSource('sounds/cast.wav', 'static'),
+    ['cast_power'] = love.audio.newSource('sounds/cast_power.wav', 'static'),
+    ['fish_on'] = love.audio.newSource('sounds/fish_on.wav', 'static'),
+    ['fish_off'] = love.audio.newSource('sounds/fish_off.wav', 'static'),
+    ['get_money'] = love.audio.newSource('sounds/get_money.wav', 'static')
 }

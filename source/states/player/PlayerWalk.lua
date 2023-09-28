@@ -13,6 +13,9 @@ function PlayerWalk:init(player)
 
     -- animation timer
     self.timer = 0
+    
+    -- walk sound timer
+    self.sound_timer = 0
 
     -- transition to another area
     self.transition = false
@@ -449,6 +452,15 @@ end
 function PlayerWalk:changeAnimation(direction, dt)
     self.timer = self.timer + dt*8
 
+    -- play walking sound
+    if self.sound_timer < 1 then
+        self:walkSoundWait(dt)
+    else
+        self.sound_timer = 0
+        Sounds['walk']:setLooping(false)
+        Sounds['walk']:play()
+    end
+
     if self.timer > 1 then
         if direction == 'left' then
             if self.player.frame == 9 then
@@ -508,5 +520,10 @@ function PlayerWalk:changeAnimation(direction, dt)
             end
         end
     end
+end
+
+function PlayerWalk:walkSoundWait(dt)
+
+    self.sound_timer = self.sound_timer + dt * 4
 
 end

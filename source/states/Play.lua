@@ -31,6 +31,8 @@ function Play:enter(params)
     self.check_lure = false
     -- timer for how long to diplay usage message
     self.timer = 0
+    -- how long to display new fish message
+    self.catch_timer = 0
 
 end
 
@@ -52,10 +54,14 @@ function Play:update(dt)
     end
 
     -- check for correct lure in area
-    if self.player.casting then
-        if self.player.area == 'river' and self.player.inventory['lure'] == 'basic' then
+    if self.player.casting and self.current_world == 'river'then
+        if self.player.inventory['lure'] == 'basic' then
             self.check_lure = true
-        elseif self.player.area == 'beach' and self.player.inventory['lure'] == 'basic' or self.player.inventory['lure'] == 'novice' then
+        else
+            self.check_lure = false
+        end
+    elseif self.player.casting and self.current_world == 'beach' then
+        if self.player.inventory['lure'] == 'basic' or self.player.inventory['lure'] == 'novice' then
             self.check_lure = true
         else
             self.check_lure = false
@@ -63,13 +69,20 @@ function Play:update(dt)
     end
 
     -- display message for short period of time
-    if self.check_lure and self.timer < 10 then
+    if self.check_lure and self.timer < 5 then
         self:waitTimer(dt)
-    elseif self.timer > 10 then
+    elseif self.timer > 5 then
         self.timer = 0
         self.check_lure = false
     end
 
+    -- display new fish mesage for short period of time
+    if self.player.catch_new and self.catch_timer < 5 then
+        self:catchTimer(dt)
+    elseif self.catch_timer > 5 then
+        self.catch_timer = 0
+        self.player.catch_new = false
+    end
 
     -- update the world
     self.world:update(dt)
@@ -104,6 +117,21 @@ function Play:render()
 
     else
 
+        -- messsage for new fish
+        if self.player.catch_new then
+            -- reset color
+            love.graphics.setColor(1, 1, 1, 1)
+            love.graphics.setFont(Fonts['x-sm'])
+            love.graphics.draw(SpriteSheet['title'], Sprites['title'][1], GAME_WIDTH / 2 - 52, 0, 0, 0.25, 0.20)
+            love.graphics.setColor(0, 0, 0, 180 / 255)
+            love.graphics.printf("NEW  FISH !!!", GAME_WIDTH / 2 - 80, 10, 150, 'center')
+        end
+
+        -- render usage for area
+        if self.check_lure then
+            self:drawUsage(self.player.area)
+        end
+
         -- tips on how to play
         self:drawIntro()
 
@@ -124,10 +152,8 @@ function Play:render()
             love.graphics.rectangle('line', 16, GAME_HEIGHT - self.player.cast_max / 2, 8, self.player.cast_max / 2, 6)
         end
 
-        -- render usage for area
-        if self.check_lure then
-            self:drawUsage(self.player.area)
-        end
+        -- reset color
+        love.graphics.setColor(1, 1, 1, 1)
 
         -- render fish caught in inventory
         if self.player.inventory['fish'][1] ~= nil then
@@ -399,5 +425,11 @@ end
 function Play:waitTimer(dt)
 
     self.timer = self.timer + dt * 2
+
+end
+
+function Play:catchTimer(dt)
+
+    self.catch_timer = self.catch_timer + dt * 2
 
 end

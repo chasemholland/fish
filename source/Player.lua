@@ -101,6 +101,9 @@ function Player:init(def)
     -- flag for if in achievements
     self.browsing_achievements = false
 
+    -- flag if new fish has been caught
+    self.catch_new = false
+
 end
 
 function Player:update(dt)

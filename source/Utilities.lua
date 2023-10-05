@@ -68,6 +68,25 @@ function GetPlayer(SpriteSheet)
 
     end
 
+    local x = 0
+    local y = 480
+
+    for row = 1, 2 do
+
+        for column = 1, 4 do
+
+            table.insert(player, love.graphics.newQuad(
+                x, y, 64, 64, SpriteSheet:getDimensions()
+            ))
+
+            x = x + 64
+
+        end
+        x = 0
+        y = y + 64
+
+    end
+
     return player
 end
 
@@ -220,6 +239,12 @@ function GetItems(SpriteSheet)
         x, y, 6, 10, SpriteSheet:getDimensions()
     ))
 
+    for x = 80, 112, 32 do
+            table.insert(items, love.graphics.newQuad(
+            x, 608, 32, 32, SpriteSheet:getDimensions()
+        ))
+    end
+
     return items
 end
 
@@ -259,6 +284,11 @@ function GetShop(SpriteSheet)
         ))
         x = x + 32
     end
+
+    -- heart item
+    table.insert(shop, love.graphics.newQuad(
+        264, 64, 44, 48, SpriteSheet:getDimensions()
+    ))
 
     return shop
 end
@@ -301,4 +331,36 @@ function GetBeach(SpriteSheet)
     end
 
     return beach
+end
+
+function GetEnemies(SpriteSheet)
+
+    local enemies = {}
+
+    for y = 0, 64, 32 do
+
+        for x = 0, 352, 32 do
+
+            table.insert(enemies, love.graphics.newQuad(
+                x, y, 32, 32, SpriteSheet:getDimensions()
+            ))
+
+        end
+    end
+
+    return enemies
+end
+
+function GetHearts(SpriteSheet)
+
+    local hearts = {}
+
+    for y = 608, 624, 16 do
+
+        table.insert(hearts, love.graphics.newQuad(
+            64, y, 16, 16, SpriteSheet:getDimensions()
+        ))
+    end
+    
+    return hearts
 end

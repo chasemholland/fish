@@ -4,77 +4,106 @@
 
 CatchFish = Class{}
 
-function CatchFish:init(area)
+function CatchFish:init(area, inventory)
 
-    self.fish = self:fish(area)
+    self.fish = self:fish(area, inventory)
 
 end
 
-function CatchFish:fish(area)
+function CatchFish:fish(area, inventory)
 
-    local fish = 1
+    local fish = 0
 
     if area == 'start' then
 
-        for i = 1, 3 do
+        local blue = math.random(1, 5)
+        local yellow = math.random(1, 5)
+        local red = math.random(1, 5)
+        local rainbow = math.random(1, 7)
 
-            local number = math.random(1, 4) == 1 and true or false
-            if number == true then
-                fish = fish + 1
-            end
-
+        if rainbow > red + yellow + blue then
+            fish = 4
+        elseif red > yellow and red > blue then
+            fish = 3
+        elseif yellow > blue then
+            fish = 2
+        else
+            fish = 1
         end
 
     elseif area == 'river' then
 
-        fish = 5
+        local blue = math.random(1, 5)
+        local yellow = math.random(1, 5)
+        local red = math.random(1, 5)
+        local rainbow = math.random(1, 7)
 
-        for i = 1, 3 do
-
-            local number = math.random(1, 4) == 1 and true or false
-            if number == true then
-                fish = fish + 1
-            end
-        end
-
---[[
-    elseif area == 'beach' then
-
-        local fish_level = math.random(1, 3)
-        if fish_level == 1 then
-            fish = fish
-        elseif fish_level == 2 then
+        if rainbow > red + yellow + blue then
+            fish = 8
+        elseif red > yellow and red > blue then
+            fish = 7
+        elseif yellow > blue then
+            fish = 6
+        else
             fish = 5
-        elseif fish_level == 3 then
-            fish = 9
         end
-
-        for i = 1, 3 do
-
-            local number = math.random(1, 2) == 1 and true or false
-            if number == true then
-                fish = fish + 1
-            end
-        end
-        ]]
 
     elseif area == 'beach' then
+        if inventory['lure'] == 'amateur' then
 
-        local fish_level = math.random(1, 2)
-        if fish_level == 1 then
-            fish = 9
-        elseif fish_level == 2 then
-            fish = 13
-        end
+            local blue = math.random(1, 5)
+            local yellow = math.random(1, 5)
+            local red = math.random(1, 5)
+            local rainbow = math.random(1, 7)
 
-        for i = 1, 3 do
+            if rainbow > red + yellow + blue then
+                fish = 12
+            elseif red > yellow and red > blue then
+                fish = 11
+            elseif yellow > blue then
+                fish = 10
+            else
+                fish = 9
+            end
 
-            local number = math.random(1, 4) == 1 and true or false
-            if number == true then
-                fish = fish + 1
+        elseif inventory['lure'] == 'advanced' then
+
+            local set = math.random(1, 2)
+            if set == 1 then
+
+                local blue = math.random(1, 5)
+                local yellow = math.random(1, 5)
+                local red = math.random(1, 5)
+                local rainbow = math.random(1, 7)
+
+                if rainbow > red + yellow + blue then
+                    fish = 12
+                elseif red > yellow and red > blue then
+                    fish = 11
+                elseif yellow > blue then
+                    fish = 10
+                else
+                    fish = 9
+                end
+
+            else
+            
+                local blue = math.random(1, 5)
+                local yellow = math.random(1, 5)
+                local red = math.random(1, 5)
+                local rainbow = math.random(1, 7)
+
+                if rainbow > red + yellow + blue then
+                    fish = 16
+                elseif red > yellow and red > blue then
+                    fish = 15
+                elseif yellow > blue then
+                    fish = 14
+                else
+                    fish = 13
+                end
             end
         end
-
     end
 
     return fish

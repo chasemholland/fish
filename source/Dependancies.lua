@@ -34,7 +34,6 @@ require 'source/GenerateBeach'
 require 'source/GenerateRiver'
 
 -- player
-require 'source/player_def'
 require 'source/Player'
 require 'source/states/player/PlayerWalk'
 require 'source/states/player/PlayerIdle'

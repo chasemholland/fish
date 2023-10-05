@@ -491,7 +491,11 @@ function Play:drawShop()
     if self.player.inventory['owned_lure']['novice'] == false then
         love.graphics.setColor(1, 1, 1, 1)
         love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], (3 * (GAME_WIDTH / 4)) - 60, GAME_HEIGHT / 4 + 44)
-        love.graphics.setColor(1, 215 / 255, 0, 1)
+        if self.player.inventory['money'] >= 2000 then
+            love.graphics.setColor(1, 215 / 255, 0, 1)
+        else
+            love.graphics.setColor(1, 0, 0, 1)
+        end
         love.graphics.printf("BUY",(3 * (GAME_WIDTH / 4)) - 48, GAME_HEIGHT / 4 + 48, 200)
     end
     --[[
@@ -512,7 +516,11 @@ function Play:drawShop()
     if self.player.inventory['owned_lure']['amateur'] == false then
         love.graphics.setColor(1, 1, 1, 1)
         love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], (GAME_WIDTH / 4) - 16, GAME_HEIGHT / 2 + 132)
-        love.graphics.setColor(1, 215 / 255, 0, 1)
+        if self.player.inventory['money'] >= 4000 then
+            love.graphics.setColor(1, 215 / 255, 0, 1)
+        else
+            love.graphics.setColor(1, 0, 0, 1)
+        end
         love.graphics.printf("BUY",(GAME_WIDTH / 4) - 4, GAME_HEIGHT / 2 + 136, 200)
     end
     --[[
@@ -533,7 +541,11 @@ function Play:drawShop()
     if self.player.inventory['owned_lure']['advanced'] == false then
         love.graphics.setColor(1, 1, 1, 1)
         love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], (3 * (GAME_WIDTH / 4)) - 60, GAME_HEIGHT / 2 + 132)
-        love.graphics.setColor(1, 215 / 255, 0, 1)
+        if self.player.inventory['money'] >= 8000 then
+            love.graphics.setColor(1, 215 / 255, 0, 1)
+        else
+            love.graphics.setColor(1, 0, 0, 1)
+        end
         love.graphics.printf("BUY",(3 * (GAME_WIDTH / 4)) - 48, GAME_HEIGHT / 2 + 136, 200)
     end
 

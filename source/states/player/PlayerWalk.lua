@@ -27,7 +27,33 @@ function PlayerWalk:update(dt)
 
     if self.transition == false then
         -- get user input for movement
-        if love.keyboard.isDown('a') then
+        if love.mouse.isDown(1) and mouseX < GAME_WIDTH - 82 and mouseY < 68 then
+            if self.player.equiped == 'pole' then
+                -- pass the second tutorial
+                if self.player.tutorial[2] == false and self.player.tutorial[1] == true then
+                    self.player.tutorial[2] = true
+                end
+                self.player.casting = true
+                self.player:changeState('casting')
+            -- swing sword
+            elseif self.player.equiped == 'sword' then
+                --Sounds['sword']:play()---------------------------- NEED TO GET NICER SOUND
+                self.player:changeState('fight')
+            end
+        elseif love.mouse.isDown(1) and mouseY > 68 then
+            if self.player.equiped == 'pole' then
+                -- pass the second tutorial
+                if self.player.tutorial[2] == false and self.player.tutorial[1] == true then
+                    self.player.tutorial[2] = true
+                end
+                self.player.casting = true
+                self.player:changeState('casting')
+            -- swing sword
+            elseif self.player.equiped == 'sword' then
+                --Sounds['sword']:play()----------------------------- NEED TO GET NICER SOUND
+                self.player:changeState('fight')
+            end
+        elseif love.keyboard.isDown('a') then
             self.player.direction = 'left'
             -- pass the first tutorial
             if self.player.tutorial[1] == false then
@@ -457,7 +483,6 @@ function PlayerWalk:changeAnimation(direction, dt)
         self:walkSoundWait(dt)
     else
         self.sound_timer = 0
-        Sounds['walk']:setLooping(false)
         Sounds['walk']:play()
     end
 

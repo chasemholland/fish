@@ -33,6 +33,10 @@ function PlayerShop:update(dt)
             self.player.inventory['money'] = self.player.inventory['money'] - 8000
             self.player.inventory['owned_lure']['advanced'] = true
             self.player.inventory['lure'] = 'advanced'
+        elseif mouseX >= (GAME_WIDTH / 2) - 40 and mouseX <= (GAME_WIDTH / 2) + 39  and mouseY >= GAME_HEIGHT / 2 + 44 and mouseY <= GAME_HEIGHT / 2 + 75 and self.player.inventory['money'] >= 500
+        and self.player.health < 8 then
+            self.player.inventory['money'] = self.player.inventory['money'] - 500
+            self.player.health = self.player.health + 1
         end
     end
     
@@ -40,6 +44,7 @@ function PlayerShop:update(dt)
     -- press escape to exit shop
     if love.mouse.pressed(1) and mouseX >= 2 and mouseX <= 82 and mouseY >= 2 and mouseY <= 34 then
         self.player.shopping = false
+        self.player.paused = false
         self.player:changeState('idle')
     end
 

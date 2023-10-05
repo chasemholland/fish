@@ -50,12 +50,11 @@ function PlayerFishing:update(dt)
 
             if self.sound_played == false then
                 -- play fish_on sound
-                Sounds['fish_on']:setLooping(false)
                 Sounds['fish_on']:play()
                 self.sound_played = true
             end
 
-            self.fish = CatchFish(self.player.area).fish
+            self.fish = CatchFish(self.player.area, self.player.inventory).fish
 
             -- fishing mechanic
             if love.mouse.isDown(2) then
@@ -70,7 +69,7 @@ function PlayerFishing:update(dt)
                 if self.player.reel_position <= 1 then
                     self.player.reel_position = 0
                 else
-                    self:reelPosition(-1.5)
+                    self:reelPosition(-1.1)
                 end
             end
 
@@ -113,9 +112,10 @@ function PlayerFishing:update(dt)
                     if self.player.fish_breakaway < BREAK then
                         self:fishBreakaway(dt, 1)
                     else
+                        -- increment fish lost count
+                        self.player.loss_count = self.player.loss_count + 1
 
                         -- play fish_off sound
-                        Sounds['fish_off']:setLooping(false)
                         Sounds['fish_off']:play()
 
                         -- fish breaks away, return to idle
@@ -129,9 +129,10 @@ function PlayerFishing:update(dt)
                     if self.player.fish_breakaway < BREAK then
                         self:fishBreakaway(dt, 1)
                     else
+                        -- increment fish lost count
+                        self.player.loss_count = self.player.loss_count + 1
 
                         -- play fish_off sound
-                        Sounds['fish_off']:setLooping(false)
                         Sounds['fish_off']:play()
 
                         -- fish breaks away, return to idle
@@ -157,19 +158,19 @@ function PlayerFishing:update(dt)
                 for i = 1, 5 do
                     if self.player.inventory['fish'][i] == nil then
                         self.player.inventory['fish'][i] = self.fish
+                        -- increment fish caught count
+                        self.player.fish_count = self.player.fish_count + 1
                         -- check if fish is new
                         if self.player.inventory['caught'][self.fish] == false then
                             -- flag for message about new fish
                             self.player.catch_new = true
                             -- play new_fish sound
-                            Sounds['new_fish']:setLooping(false)
                             Sounds['new_fish']:play()
                             -- set fish to has been caught
                             self.player.inventory['caught'][self.fish] = true
                             goto continue
                         else
                             -- play old_fish sound
-                            Sounds['old_fish']:setLooping(false)
                             Sounds['old_fish']:play()
                             goto continue
                         end

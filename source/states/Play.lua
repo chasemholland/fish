@@ -15,12 +15,25 @@ function Play:enter(params)
     -- initialize a player
     self.player = params.player
 
+    -- initialize enemies
+    self.enemies = {}
+    for i = 1, math.random(8, 10) do
+        table.insert(self.enemies, Enemies())
+        -- set up enemies state machine
+        self.enemies[i].statemachine = SM {
+            ['walk'] = function() return EnemiesWalk(self.enemies[i], self.player) end,
+            ['idle'] = function() return EnemiesIdle(self.enemies[i]) end
+        }
+        self.enemies[i]:changeState('idle')
+    end
+
     -- set up player state machine
     self.player.statemachine = SM {
         ['walk'] = function() return PlayerWalk(self.player) end,
         ['idle'] = function() return PlayerIdle(self.player) end,
         ['casting'] = function() return PlayerCasting(self.player) end,
         ['fishing'] = function() return PlayerFishing(self.player) end,
+        ['fight'] = function() return PlayerFight(self.player, self.enemies) end,
         ['shop'] = function() return PlayerShop(self.player) end,
         ['inventory'] = function() return PlayerInventory(self.player) end,
         ['achievement'] = function() return PlayerAchievement(self.player) end
@@ -29,16 +42,122 @@ function Play:enter(params)
 
     -- flag to check for correct lure
     self.check_lure = false
+
     -- timer for how long to diplay usage message
     self.timer = 0
+
     -- how long to display new fish message
     self.catch_timer = 0
+
+    -- timer to trigger night time
+    self.night_timer = CYCLE / 2
+
+    -- night flag
+    self.night = false
+
+    -- only spawn on area enter
+    self.spawned = false
+
+    -- timer to spawn more enemies
+    self.spawn_timer = 0
+
+    -- time in game
+    self.game_time = 0
+
+    -- completion check
+    self.completion = 0
 
 end
 
 function Play:update(dt)
+
+    -- keep track of time played
+    self:gameTimer(dt)
+
+    -- increment the day cycle
+    if self.night_timer >= 1 then
+        self:nightTimer(dt)
+    elseif not self.night then
+        self.night = true
+        self.night_timer = CYCLE
+    elseif self.night then
+        self.night = false
+        self.night_timer = CYCLE
+    end
+
+    -- check if enemies have been spawned
+    if self.current_world == 'river' and self.night and not self.spawned then
+        for i = 1, #self.enemies do
+            self.enemies[i].area = self.current_world
+            self.enemies[i].x = math.random(GAME_WIDTH / 2, GAME_WIDTH - 66)
+            self.enemies[i].y = math.random(10, GAME_HEIGHT - 48)
+            self.enemies[i].waiting = false
+            self.enemies[i]:changeState('walk')
+        end
+        self.spawned = true
+    elseif self.current_world == 'beach' and self.night and not self.spawned then
+        for i = 1, #self.enemies do
+            self.enemies[i].area = self.current_world
+            self.enemies[i].x = math.random(96, GAME_WIDTH / 2 - 16)
+            self.enemies[i].y = math.random(0, GAME_HEIGHT - 36)
+            self.enemies[i].waiting = false
+            self.enemies[i]:changeState('walk')
+        end
+        self.spawned = true
+    elseif self.current_world == 'start' or not self.night then
+        for i = 1, #self.enemies do
+            self.enemies[i].x = 0
+            self.enemies[i].y = 0
+            self.enemies[i].waiting = true
+            self.enemies[i]:changeState('idle')
+        end
+        self.spawned = false
+    end
+
+    -- randomly generate more enemies at night
+    if self.current_world == 'river' and self.night then
+        if self.spawn_timer > 10 then
+            local current_count = #self.enemies
+            for i = 1, math.random(3, 6) do
+                table.insert(self.enemies, Enemies())
+                -- set up enemies state machine
+                self.enemies[i + current_count].statemachine = SM {
+                    ['walk'] = function() return EnemiesWalk(self.enemies[i + current_count], self.player) end,
+                    ['idle'] = function() return EnemiesIdle(self.enemies[i + current_count]) end
+                }
+                self.enemies[i + current_count].area = self.current_world
+                self.enemies[i + current_count].x = math.random(GAME_WIDTH / 2, GAME_WIDTH - 66)
+                self.enemies[i + current_count].y = math.random(10, GAME_HEIGHT - 48)
+                self.enemies[i + current_count].waiting = false
+                self.enemies[i + current_count]:changeState('walk')
+            end
+            self.spawn_timer = 0
+        else
+            self:spawnTimer(dt)
+        end
+    elseif self.current_world == 'beach' and self.night then
+        if self.spawn_timer > 10 then
+            local current_count = #self.enemies
+            for i = 1, math.random(3, 6) do
+                table.insert(self.enemies, Enemies())
+                -- set up enemies state machine
+                self.enemies[i + current_count].statemachine = SM {
+                    ['walk'] = function() return EnemiesWalk(self.enemies[i + current_count], self.player) end,
+                    ['idle'] = function() return EnemiesIdle(self.enemies[i + current_count]) end
+                }
+                self.enemies[i + current_count].area = self.current_world
+                self.enemies[i + current_count].x = math.random(96, GAME_WIDTH / 2 - 16)
+                self.enemies[i + current_count].y = math.random(0, GAME_HEIGHT - 36)
+                self.enemies[i + current_count].waiting = false
+                self.enemies[i + current_count]:changeState('walk')
+            end
+            self.spawn_timer = 0
+        else
+            self:spawnTimer(dt)
+        end
+    end
     
-    -- render currect area
+    -- render correct area
     if self.player.area == 'start' and self.current_world == 'beach' then
         self.world = GenerateWorld()
         self.current_world = 'start'
@@ -87,6 +206,51 @@ function Play:update(dt)
     -- update the world
     self.world:update(dt)
 
+    -- update enemies
+    for i = 1, #self.enemies do
+        if not self.enemies[i].dead and self.enemies[i].health <= 0 then
+            -- pass the eighth tutorial
+            if self.player.tutorial[8] == false and self.player.tutorial[7] == true then
+                self.player.tutorial[8] = true
+            end
+            -- kill enemy
+            self.enemies[i].dead = true
+            -- increment kill count
+            self.player.kills = self.player.kills + 1
+            -- chance for money
+            local money = math.random((self.enemies[i].color * (10)), (self.enemies[i].color * (20)))
+            -- store money gained for visual
+            self.player.money_gained['value'] = money
+            -- increment player money
+            self.player.inventory['money'] = self.player.inventory['money'] + money
+            -- increment total earned money
+            self.player.money_earned = self.player.money_earned + money
+            -- play get money sound
+            Sounds['get_money']:play()
+        else
+            self.enemies[i]:update(dt)
+        end
+    end
+
+    -- pass the nineth tutorial
+    if self.player.tutorial[9] == false and self.player.tutorial[8] == true then
+        Timer.after(8, function()
+            self.player.tutorial[9] = true
+        end)
+        Timer.update(dt)
+    end
+
+    -- show money gained
+    if self.player.money_gained['value'] > 0 then
+        Timer.tween(1, {
+            [self.player.money_gained] = {alpha = 0}
+        }):finish(function()
+            self.player.money_gained['value'] = 0
+            self.player.money_gained['alpha'] = 255
+        end)
+        Timer.update(dt)
+    end
+
     -- update the player
     self.player:update(dt)
 
@@ -95,15 +259,46 @@ function Play:update(dt)
         love.event:quit()
     end
 
+    -- switch item
+    if self.player.equiped ~= 'pole' then
+        if love.mouse.wheelmoved == 'up' or love.keyboard.pressed('t') then
+            -- pass the seventh tutorial
+            if self.player.tutorial[7] == false and self.player.tutorial[6] == true then
+                self.player.tutorial[7] = true
+            end
+            self.player.equiped = 'pole'
+        end
+    elseif self.player.equiped ~= 'sword' then
+        if love.mouse.wheelmoved == 'down' or love.keyboard.pressed('t') then
+            self.player.equiped = 'sword'
+        end
+    end
+
+    -- end game if player dies
+    if self.player.health <= 0 then
+        gameSM:change('game-over', {
+            time = self.game_time,
+            money = self.player.money_earned,
+            caught = self.player.fish_count,
+            lost = self.player.loss_count,
+            kills = self.player.kills,
+            completion = self.completion
+        })
+    -- end game if player reaches 100%
+    elseif self.completion == 100 then
+        gameSM:change('game-over', {
+            time = self.game_time,
+            money = self.player.money_earned,
+            caught = self.player.fish_count,
+            lost = self.player.loss_count,
+            kills = self.player.kills,
+            completion = self.completion
+        })
+    end
+
 end
 
 function Play:render()
-
-    -- render the world
-    self.world:render()
-
-    -- render the player
-    self.player:render()
 
     if self.player.shopping then
 
@@ -116,6 +311,45 @@ function Play:render()
         self:drawAchievement()
 
     else
+        -- render the world
+        self.world:render()
+
+        -- render enemies
+        if self.current_world == 'river' or self.current_world == 'beach' and self.night then
+            for i = 1, #self.enemies do
+                self.enemies[i]:render()
+            end
+        end
+        -- render the player
+        self.player:render()
+
+        -- darken the screen for night time
+        if self.night then
+            love.graphics.setColor(0, 0, 0, 100 / 255)
+            love.graphics.rectangle('fill', 0, 0, GAME_WIDTH, GAME_HEIGHT)
+        end
+
+        -- reset color
+        love.graphics.setColor(1, 1, 1, 1)
+
+        -- render cast power bar if casting
+        if self.player.casting then
+            love.graphics.setLineWidth(2)
+            love.graphics.setColor(1, 0, 0, 1)
+            love.graphics.rectangle('fill', 16, GAME_HEIGHT - self.player.timer / 2, 8, self.player.timer / 2, 4)
+            love.graphics.setColor(1, 1, 1, 1)
+            love.graphics.rectangle('line', 16, GAME_HEIGHT - self.player.cast_max / 2, 8, self.player.cast_max / 2, 6)
+        end
+
+        -- render fishing mechanic
+        if self.player.fish_on then
+            self:drawFishing()
+        end
+
+        -- render usage for area
+        if self.check_lure then
+            self:drawUsage(self.player.area)
+        end
 
         -- messsage for new fish
         if self.player.catch_new then
@@ -127,33 +361,19 @@ function Play:render()
             love.graphics.printf("NEW  FISH !!!", GAME_WIDTH / 2 - 80, 10, 150, 'center')
         end
 
-        -- render usage for area
-        if self.check_lure then
-            self:drawUsage(self.player.area)
-        end
-
         -- tips on how to play
         self:drawIntro()
 
         -- reset color
         love.graphics.setColor(1, 1, 1, 1)
 
+        -- render player hearts
+        self:drawHearts()
+
         -- player inventory
         for i = 1, 5 do
             love.graphics.draw(SpriteSheet['inventory'], Sprites['inventory'][1], (30 * 7) + (i * 30), GAME_HEIGHT - 31)
         end
-
-        -- render cast power bar if casting
-        if self.player.casting then
-            love.graphics.setLineWidth(2)
-            love.graphics.setColor(1, 0, 0, 1)
-            love.graphics.rectangle('fill', 16, GAME_HEIGHT - self.player.timer / 2, 8, self.player.timer / 2, 4)
-            love.graphics.setColor(1, 1, 1, 1)
-            love.graphics.rectangle('line', 16, GAME_HEIGHT - self.player.cast_max / 2, 8, self.player.cast_max / 2, 6)
-        end
-
-        -- reset color
-        love.graphics.setColor(1, 1, 1, 1)
 
         -- render fish caught in inventory
         if self.player.inventory['fish'][1] ~= nil then
@@ -163,6 +383,20 @@ function Play:render()
                 end
             end
         end
+
+        -- selected item
+        if self.player.equiped == 'pole' then
+            love.graphics.setColor(1, 1, 1, 140 / 255)
+            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][2], 30 * 6, GAME_HEIGHT - 32)
+            love.graphics.setColor(1, 1, 1 ,1)
+            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][3], 30 * 5, GAME_HEIGHT - 32)
+        elseif self.player.equiped == 'sword' then
+            love.graphics.setColor(1, 1, 1, 1)
+            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][2], 30 * 6, GAME_HEIGHT - 32)
+            love.graphics.setColor(1, 1, 1, 140 / 255)
+            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][3], 30 * 5, GAME_HEIGHT - 32)
+        end
+        
 
         -- render quit button
         love.graphics.setColor(1, 1, 1, 180 / 255)
@@ -174,6 +408,11 @@ function Play:render()
         -- render money
         love.graphics.setColor(1, 215 / 255, 0, 1)
         love.graphics.printf('$' .. tostring(self.player.inventory['money']), 397, GAME_HEIGHT - 28, 150)
+        -- render money gained
+        if self.player.money_gained['value'] > 0 then
+            love.graphics.setColor(0, 1, 0, self.player.money_gained['alpha'] / 255)
+            love.graphics.printf('+ $' .. tostring(self.player.money_gained['value']), 397, GAME_HEIGHT - 52, 150)
+        end
 
         -- render shop, sell, and achievement buttons
         love.graphics.setFont(Fonts['sm'])
@@ -185,6 +424,35 @@ function Play:render()
         love.graphics.printf('SELL', GAME_WIDTH - 76, 41, 100)
         love.graphics.setColor(0, 0, 0, 180 / 255)
         love.graphics.printf('SHOP', GAME_WIDTH - 80, 7, 100)
+
+        -- render night/day indicator
+        love.graphics.setFont(Fonts['sm'])
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.rectangle('fill', GAME_WIDTH - 208, 20, CYCLE, 12, 2)
+        if not self.night then
+            love.graphics.printf("DAY", GAME_WIDTH - 178, -2, 200)
+        else
+            love.graphics.printf("NIGHT", GAME_WIDTH - 190, -2, 200)
+        end
+        -- night/day progress indicator
+        if not self.night then
+            -- day bar
+            love.graphics.setColor(1, 204 / 255, 0, 1)
+            love.graphics.rectangle('fill', (GAME_WIDTH - 208 + (CYCLE - self.night_timer)), 20, self.night_timer, 12)
+            -- night bar
+            love.graphics.setColor(0, 0, 139 / 255, 1)
+            love.graphics.rectangle('fill', GAME_WIDTH - 208, 20, (CYCLE - self.night_timer), 12)
+        else
+            -- day bar
+            love.graphics.setColor(1, 204 / 255, 0, 1)
+            love.graphics.rectangle('fill', GAME_WIDTH - 208, 20, (CYCLE - self.night_timer), 12)
+            -- night bar
+            love.graphics.setColor(0, 0, 139 / 255, 1)
+            love.graphics.rectangle('fill', (GAME_WIDTH - 208 + (CYCLE - self.night_timer)), 20, self.night_timer, 12)
+        end
+        love.graphics.setLineWidth(2)
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.rectangle('line', GAME_WIDTH - 208, 20, CYCLE, 12, 2)
 
     end
 end
@@ -269,6 +537,25 @@ function Play:drawShop()
         love.graphics.printf("BUY",(3 * (GAME_WIDTH / 4)) - 48, GAME_HEIGHT / 2 + 136, 200)
     end
 
+    --[[
+        hearts
+    ]]--
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][14], (GAME_WIDTH / 2 - 22), GAME_HEIGHT / 2 - 68)
+    love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][2], (GAME_WIDTH / 2 - 80), GAME_HEIGHT / 2 - 20)
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.printf('HEALTH', (GAME_WIDTH / 2 - 54), GAME_HEIGHT / 2 - 10, 200)
+    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.printf('$500', (GAME_WIDTH / 2 - 38), GAME_HEIGHT / 2 + 16, 200)
+    --buy button
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], (GAME_WIDTH / 2) - 40, GAME_HEIGHT / 2 + 44)
+    if self.player.inventory['money'] >= 500 and self.player.health < 8 then
+        love.graphics.setColor(1, 215 / 255, 0, 1)
+    else
+        love.graphics.setColor(1, 0, 0, 1)
+    end
+    love.graphics.printf("BUY", (GAME_WIDTH / 2) - 28, GAME_HEIGHT / 2 + 48, 200)
 
     -- exit button
     love.graphics.setColor(1, 1, 1, 1)
@@ -316,6 +603,9 @@ function Play:drawAchievement()
         end
     end
 
+    -- keep track of completion
+    self.completion = (math.floor((caught / 16) * 100))
+
     -- completion percentage
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.setFont(Fonts['sm'])
@@ -332,6 +622,42 @@ function Play:drawAchievement()
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.printf('COMPLETE', GAME_WIDTH / 2 - 74, GAME_HEIGHT / 4 + 20 + (48 * 4), 300)
 
+
+end
+
+function Play:drawFishing()
+
+    -- background
+    love.graphics.setColor(0, 0, 1, 1)
+    love.graphics.rectangle('fill', 16, GAME_HEIGHT - self.player.cast_max , 20, self.player.cast_max, 4)
+    -- reel
+    love.graphics.setColor(1, 0, 0, 1)
+    love.graphics.rectangle('fill', 16, GAME_HEIGHT - self.player.reel_position - 32, 20, 32, 4)
+    -- fish
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.draw(SpriteSheet['fish'], Sprites['small_fish'][2], 18, GAME_HEIGHT - self.player.fish_position - 16)
+    -- outine
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.rectangle('line', 16, GAME_HEIGHT - self.player.cast_max, 20, self.player.cast_max, 4)
+
+    -- reel in progress
+    -- outine
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.rectangle('line', 38, GAME_HEIGHT - CATCH, 10, CATCH, 4)
+    -- reel_in
+    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.rectangle('fill', 38, GAME_HEIGHT - self.player.reel_in, 10, self.player.reel_in, 4)
+
+    -- breakaway progress
+    -- outine
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.rectangle('line', 50, GAME_HEIGHT - BREAK, 10, BREAK, 4)
+    -- reel_in
+    love.graphics.setColor((self.player.fish_breakaway * 2)/255, 100/255, 10/255, 1)
+    love.graphics.rectangle('fill', 50, GAME_HEIGHT - self.player.fish_breakaway, 10, self.player.fish_breakaway, 4)
+
+    -- reset color
+    love.graphics.setColor(1, 1, 1, 1)
 
 end
 
@@ -403,6 +729,40 @@ function Play:drawIntro()
 
     end
 
+    -- switching between pole and sword
+    if self.player.tutorial[7] == false and self.player.tutorial[6] == true then
+
+        love.graphics.setColor(1, 1, 1, 180 / 255)
+        love.graphics.setFont(Fonts['x-sm'])
+        love.graphics.draw(SpriteSheet['title'], Sprites['title'][1], 0, 0, 0, 0.5, 0.38)
+        love.graphics.setColor(0, 0, 0, 180 / 255)
+        love.graphics.printf("SCOLL  YOUR  MOUSE  UP  AND  DOWN  OR  USE  'T'  TO  SWITCH  BETWEEN  POLE  AND  SWORD.", 20, 10, 150, 'center')
+
+    end
+
+    -- when enemies spawn
+    if self.player.tutorial[8] == false and self.player.tutorial[7] == true then
+
+        love.graphics.setColor(1, 1, 1, 180 / 255)
+        love.graphics.setFont(Fonts['x-sm'])
+        love.graphics.draw(SpriteSheet['title'], Sprites['title'][1], 0, 0, 0, 0.5, 0.54)
+        love.graphics.setColor(0, 0, 0, 180 / 255)
+        love.graphics.printf("SLIMES  WILL  SPAWN  AT  NIGHT  IN  THE  RIVER  AND  OCEAN  AREAS,  USE  YOUR  SWORD  TO  KILL  THEM  AND  EARN  SOME  EXTRA  MONEY.", 20, 10, 150, 'center')
+
+    end
+
+    -- what happens if you die
+    if self.player.tutorial[9] == false and self.player.tutorial[8] == true then
+
+        love.graphics.setColor(1, 1, 1, 180 / 255)
+        love.graphics.setFont(Fonts['x-sm'])
+        love.graphics.draw(SpriteSheet['title'], Sprites['title'][1], 0, 0, 0, 0.5, 0.25)
+        love.graphics.setColor(0, 0, 0, 180 / 255)
+        love.graphics.printf("IF  YOU  DIE,  IT'S  GAME  OVER  SO  BE  CAREFUL", 20, 10, 150, 'center')
+
+    end
+    
+
 end
 
 function Play:drawUsage(area)
@@ -422,6 +782,19 @@ function Play:drawUsage(area)
     end
 end
 
+function Play:drawHearts()
+
+    for i = 1, 8 do
+        if self.player.health >= i then
+            love.graphics.draw(SpriteSheet['fish'], Sprites['hearts'][2], (30 * 7) + (i * 18) + 16, GAME_HEIGHT - 48)
+        else
+            love.graphics.draw(SpriteSheet['fish'], Sprites['hearts'][1], (30 * 7) + (i * 18) + 16, GAME_HEIGHT - 48)
+        end
+    end
+
+
+end
+
 function Play:waitTimer(dt)
 
     self.timer = self.timer + dt * 2
@@ -431,5 +804,23 @@ end
 function Play:catchTimer(dt)
 
     self.catch_timer = self.catch_timer + dt * 2
+
+end
+
+function Play:nightTimer(dt)
+
+    self.night_timer = self.night_timer - dt
+
+end
+
+function Play:spawnTimer(dt)
+
+    self.spawn_timer = self.spawn_timer + dt
+
+end
+
+function Play:gameTimer(dt)
+
+    self.game_time = self.game_time + dt
 
 end

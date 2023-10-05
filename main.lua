@@ -28,7 +28,8 @@ function love.load()
     -- set up state machine
     gameSM = SM {
         ['start'] = function() return Start() end,
-        ['play'] = function() return Play() end
+        ['play'] = function() return Play() end,
+        ['game-over'] = function() return GameOver() end
     }
     gameSM:change('start')
 
@@ -38,6 +39,9 @@ function love.load()
     -- keep track of mouse input
     love.mouse.wasPressed = {}
 
+    love.mouse.wheelmoved = ''
+
+    Sounds['background']:setVolume(.5)
     Sounds['background']:setLooping(true)
     Sounds['background']:play()
 
@@ -67,6 +71,14 @@ function love.mouse.pressed(key)
     return love.mouse.wasPressed[key]
 end
 
+function love.wheelmoved(x, y)
+    if y > 0 then
+        love.mouse.wheelmoved = 'up'
+    elseif y < 0 then
+        love.mouse.wheelmoved = 'down'
+    end
+end
+
 function love.update(dt)
 
     -- get relative mouse coordinates
@@ -86,6 +98,7 @@ function love.update(dt)
     -- empty input table
     love.keyboard.keysPressed = {}
     love.mouse.wasPressed = {}
+    love.mouse.wheelmoved = ''
 
 end
 

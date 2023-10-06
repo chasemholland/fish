@@ -26,12 +26,12 @@ function Start:update(dt)
     and mouseY >= GAME_HEIGHT / 2 + 46 and mouseY <= GAME_HEIGHT / 2 + 62 then
         if not self.skip then
             self.skip = true
-            for i = 1, 6 do
+            for i = 1, 9 do
                 self.player.tutorial[i] = true
             end
         else
             self.skip = false
-            for i = 1, 6 do
+            for i = 1, 9 do
                 self.player.tutorial[i] = false
             end
         end

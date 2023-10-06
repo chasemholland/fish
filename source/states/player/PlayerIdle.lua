@@ -66,7 +66,7 @@ function PlayerIdle:update(dt)
             
         -- swing sword
         elseif self.player.equiped == 'sword' then
-            --Sounds['sword']:play()---------------------------- NEED TO GET NICER SOUND
+            Sounds['sword_swing']:play()
             self.player:changeState('fight')
         end
     elseif love.mouse.isDown(1) and mouseY > 68 and self.timer > 1 then
@@ -80,17 +80,10 @@ function PlayerIdle:update(dt)
 
         -- swing sword
         elseif self.player.equiped == 'sword' then
-            --Sounds['sword']:play()------------------------------NEED TO GET NICER SOUND
+            Sounds['sword_swing']:play()
             self.player:changeState('fight')
         end
     end
-
-    --[[ 
-        open inventory
-    if love.keyboard.pressed('tab') and not self.player.browsing then
-        self.player:changeState('inventory')
-    end
-    ]]
 
     -- timer only called on init, used to not allow casting when changing to idle from a different state
     if self.timer <= 1 then

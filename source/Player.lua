@@ -128,9 +128,6 @@ function Player:init(def)
     -- flag used to determine if fish breaks away
     self.fish_breakaway = 1
 
-    -- flag for if in inventory -- WIP ---
-    self.browsing_inventory = false
-
     -- flag if new fish has been caught
     self.catch_new = false
 

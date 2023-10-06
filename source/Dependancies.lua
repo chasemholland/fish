@@ -40,7 +40,6 @@ require 'source/states/player/PlayerIdle'
 require 'source/states/player/PlayerCasting'
 require 'source/states/player/PlayerFishing'
 require 'source/states/player/PlayerShop'
-require 'source/states/player/PlayerInventory'
 require 'source/states/player/PlayerAchievement'
 require 'source/states/player/PlayerFight'
 
@@ -105,15 +104,18 @@ Sounds = {
     ['fish_on'] = love.audio.newSource('sounds/fish_on.wav', 'static'),
     ['get_money'] = love.audio.newSource('sounds/get_money.wav', 'static'),
     ['hurt'] = love.audio.newSource('sounds/hurt.wav', 'static'),
+    ['loose_money'] = love.audio.newSource('sounds/loose_money.wav', 'static'),
     ['new_fish'] = love.audio.newSource('sounds/new_fish.wav', 'static'),
     ['old_fish'] = love.audio.newSource('sounds/old_fish.wav', 'static'),
     ['squish'] = love.audio.newSource('sounds/squish.wav', 'static'),
-    ['sword'] = love.audio.newSource('sounds/sword.wav', 'static'),
+    ['sword_swing'] = love.audio.newSource('sounds/swing_sword.wav', 'static'),
     ['sword_hit'] = love.audio.newSource('sounds/sword_hit.wav', 'static'),
     ['walk'] = love.audio.newSource('sounds/walk.wav', 'static'), 
 }
 
 -- Set Sound Volumes
 Sounds['get_money']:setVolume(0.5)
+Sounds['loose_money']:setVolume(0.5)
 Sounds['hurt']:setVolume(0.5)
 Sounds['new_fish']:setVolume(0.5)
+Sounds['sword_swing']:setVolume(0.5)

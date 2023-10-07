@@ -399,7 +399,11 @@ function Play:render()
         
 
         -- render quit button
-        love.graphics.setColor(1, 1, 1, 180 / 255)
+        if mouseX >= GAME_WIDTH - 82 and mouseX <= GAME_WIDTH - 2 and mouseY >= GAME_HEIGHT - 34 and mouseY <= GAME_HEIGHT - 2 then
+            love.graphics.setColor(1, 1, 1, 1)
+        else
+            love.graphics.setColor(1, 1, 1, 180 / 255)
+        end
         love.graphics.setFont(Fonts['sm'])
         love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], GAME_WIDTH - 82, GAME_HEIGHT - 34)
         love.graphics.setColor(0, 0, 0, 180 / 255)
@@ -414,16 +418,34 @@ function Play:render()
             love.graphics.printf('+ $' .. tostring(self.player.money_gained['value']), 397, GAME_HEIGHT - 52, 150)
         end
 
-        -- render shop, sell, and achievement buttons
+        -- render shop button
         love.graphics.setFont(Fonts['sm'])
-        love.graphics.setColor(1, 1, 1, 180 / 255)
+        if mouseX >= GAME_WIDTH - 82 and mouseX <= GAME_WIDTH - 2 and mouseY >= 2 and mouseY <= 34 then
+            love.graphics.setColor(1, 1, 1, 1)
+        else
+            love.graphics.setColor(1, 1, 1, 180 / 255)
+        end
         love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], GAME_WIDTH - 82, 2)
-        love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], GAME_WIDTH - 82, 36)
-        love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][8], GAME_WIDTH - 46, 70)
-        love.graphics.setColor(0, 1, 0, 180 / 255)
-        love.graphics.printf('SELL', GAME_WIDTH - 76, 41, 100)
         love.graphics.setColor(0, 0, 0, 180 / 255)
         love.graphics.printf('SHOP', GAME_WIDTH - 80, 7, 100)
+
+        -- render sell button
+        if mouseX >= GAME_WIDTH - 82 and mouseX <= GAME_WIDTH - 2 and mouseY >= 36 and mouseY <= 68 then
+            love.graphics.setColor(1, 1, 1, 1)
+        else
+            love.graphics.setColor(1, 1, 1, 180 / 255)
+        end
+        love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], GAME_WIDTH - 82, 36)
+        love.graphics.setColor(0, 1, 0, 180 / 255)
+        love.graphics.printf('SELL', GAME_WIDTH - 76, 41, 100)
+
+        -- render achievement button
+        if mouseX >= GAME_WIDTH - 46 and mouseX <= GAME_WIDTH - 2 and mouseY >= 70 and mouseY <= 118 then
+            love.graphics.setColor(1, 1, 1, 1)
+        else
+            love.graphics.setColor(1, 1, 1, 180 / 255)
+        end
+        love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][8], GAME_WIDTH - 46, 70)
 
         -- render night/day indicator
         love.graphics.setFont(Fonts['sm'])
@@ -489,7 +511,11 @@ function Play:drawShop()
     end
     -- buy button
     if self.player.inventory['owned_lure']['novice'] == false then
-        love.graphics.setColor(1, 1, 1, 1)
+        if mouseX >= ((3 * (GAME_WIDTH / 4)) - 60) and mouseX <= ((3 * (GAME_WIDTH / 4)) + 20) and mouseY >= (GAME_HEIGHT / 4 + 44 )and mouseY <= (GAME_HEIGHT / 4 + 76) then
+            love.graphics.setColor(1, 1, 1, 1)
+        else
+            love.graphics.setColor(1, 1, 1, 160 / 255)
+        end
         love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], (3 * (GAME_WIDTH / 4)) - 60, GAME_HEIGHT / 4 + 44)
         if self.player.inventory['money'] >= 2000 then
             love.graphics.setColor(1, 215 / 255, 0, 1)
@@ -498,6 +524,7 @@ function Play:drawShop()
         end
         love.graphics.printf("BUY",(3 * (GAME_WIDTH / 4)) - 48, GAME_HEIGHT / 4 + 48, 200)
     end
+
     --[[
         amatuer hook
     ]]--
@@ -514,7 +541,11 @@ function Play:drawShop()
     end
     -- buy button
     if self.player.inventory['owned_lure']['amateur'] == false then
-        love.graphics.setColor(1, 1, 1, 1)
+        if mouseX >= ((GAME_WIDTH / 4) - 16) and mouseX <= ((GAME_WIDTH / 4) + 64) and mouseY >= (GAME_HEIGHT / 2 + 132) and mouseY <= (GAME_HEIGHT / 2 + 164) then
+            love.graphics.setColor(1, 1, 1, 1)
+        else
+            love.graphics.setColor(1, 1, 1, 160 / 255)
+        end
         love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], (GAME_WIDTH / 4) - 16, GAME_HEIGHT / 2 + 132)
         if self.player.inventory['money'] >= 4000 then
             love.graphics.setColor(1, 215 / 255, 0, 1)
@@ -539,7 +570,11 @@ function Play:drawShop()
     end
     -- buy button
     if self.player.inventory['owned_lure']['advanced'] == false then
-        love.graphics.setColor(1, 1, 1, 1)
+        if mouseX >= ((3 * (GAME_WIDTH / 4)) - 60) and mouseX <= ((3 * (GAME_WIDTH / 4)) + 20) and mouseY >= (GAME_HEIGHT / 2 + 132) and mouseY <= (GAME_HEIGHT / 2 + 164) then
+            love.graphics.setColor(1, 1, 1, 1)
+        else
+            love.graphics.setColor(1, 1, 1, 160 / 255)
+        end
         love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], (3 * (GAME_WIDTH / 4)) - 60, GAME_HEIGHT / 2 + 132)
         if self.player.inventory['money'] >= 8000 then
             love.graphics.setColor(1, 215 / 255, 0, 1)
@@ -560,7 +595,11 @@ function Play:drawShop()
     love.graphics.setColor(0, 1, 0, 1)
     love.graphics.printf('$500', (GAME_WIDTH / 2 - 38), GAME_HEIGHT / 2 + 16, 200)
     --buy button
-    love.graphics.setColor(1, 1, 1, 1)
+    if mouseX >= (GAME_WIDTH / 2) - 40 and mouseX <= (GAME_WIDTH / 2) + 39  and mouseY >= GAME_HEIGHT / 2 + 44 and mouseY <= GAME_HEIGHT / 2 + 75 then
+        love.graphics.setColor(1, 1, 1, 1)
+    else
+        love.graphics.setColor(1, 1, 1, 160 / 255)
+    end
     love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], (GAME_WIDTH / 2) - 40, GAME_HEIGHT / 2 + 44)
     if self.player.inventory['money'] >= 500 and self.player.health < 8 then
         love.graphics.setColor(1, 215 / 255, 0, 1)
@@ -570,7 +609,11 @@ function Play:drawShop()
     love.graphics.printf("BUY", (GAME_WIDTH / 2) - 28, GAME_HEIGHT / 2 + 48, 200)
 
     -- exit button
-    love.graphics.setColor(1, 1, 1, 1)
+    if mouseX >= 2 and mouseX <= 82 and mouseY >= 2 and mouseY <= 34 then
+        love.graphics.setColor(1, 1, 1, 1)
+    else
+        love.graphics.setColor(1, 1, 1, 160 / 255)
+    end
     love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], 2, 2)
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.printf('EXIT', 7, 7, 200)
@@ -583,7 +626,11 @@ function Play:drawAchievement()
     love.graphics.setFont(Fonts['sm'])
 
     -- exit button
-    love.graphics.setColor(1, 1, 1, 1)
+    if mouseX >= 2 and mouseX <= 82 and mouseY >= 2 and mouseY <= 34 then
+        love.graphics.setColor(1, 1, 1, 1)
+    else
+        love.graphics.setColor(1, 1, 1, 160 / 255)
+    end
     love.graphics.draw(SpriteSheet['shop'], Sprites['shop_items'][1], 2, 2)
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.printf('EXIT', 7, 7, 200)

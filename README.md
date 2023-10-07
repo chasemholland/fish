@@ -1,6 +1,6 @@
 # Fish-landia
 
-Fish-landia is a game writen in lua and ran with LOVE2D. The goal of the game is to catch every type of fish, whilst fighting off evil slimes. In doing so, the game will end and bring you to a screen that shows off some interesting stats about your playthrough. In addition to catching every type of fish, dying from slimes will also end the game and bring you to a screen that shows the same interesting stats.
+Fish-landia is a game written in lua and ran with LOVE2D. The goal of the game is to catch every type of fish, whilst fighting off evil slimes. In doing so, the game will end and bring you to a screen that shows off some interesting stats about your playthrough. In addition to catching every type of fish, dying from slimes will also end the game and bring you to a screen that shows the same interesting stats.
 
 ## How to get started
 
@@ -13,3 +13,7 @@ I've spent countless hours getting this game to the point it is at now all becau
 ## Graphics & Sounds
 
 All of the graphics and sounds are made by myself with the help of a pixel art program called Aseprite and two audio production softwares, FL-Studio and Bfxr. Though I could have found many of the graphics and sound effects for free online that would have sufficed, I decied to do it all myself so that I could dip my hands into every aspect of making a game. In addition to learning a lot with regards to the coding aspect of games, I also have greatly improved in my pixel art and sound creation ability, which at the beging of the project was basically nil.
+
+## The Player
+
+The player is a simlpe fisherman equiped with a pole and a sword with one one goal, catch every fish possible. He is first spawned in a starting location with a river hidden hidden to the left an ocean hiddien to the right. A simple and straight forward tutorial in the form of messages appear in the top left of the screen that explain how to play and the goal of the game. This tutorial is optional via a check box on the start screen, due to the possibility of death and having to start over. 

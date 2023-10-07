@@ -85,9 +85,15 @@ function love.update(dt)
     mouseX, mouseY = push:toGame(love.mouse.getX(), love.mouse.getY())
     if mouseX then
         mouseX = math.floor(mouseX)
+    else
+        -- set a value to mouseX if cursor goes offscreen
+        mouseX = -1
     end
     if mouseY then
         mouseY = math.floor(mouseY)
+    else
+        -- set a value to mouseY if cursor goes offscreen
+        mouseY = -1
     end
 
     Timer.update(dt)

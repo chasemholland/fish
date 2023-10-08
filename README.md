@@ -4,6 +4,8 @@
 
 Fish-landia is a game written in Lua and ran with LOVE2D. The goal of the game is to catch every type of fish, whilst fighting off evil slimes. In doing so, the game will end and bring you to a screen that shows off some interesting stats about your playthrough. In addition to catching every type of fish, dying from slimes will also end the game and bring you to a screen that shows the same interesting stats.
 
+![Alt text](README_IMAGES/GameOver.PNG)
+
 ## How to get started
 
 You can download the .zip file and extract to a preffered location. Then download and install love2d. Once you have done these two steps, you can simply drag the game file onto the love2d application to start playing.

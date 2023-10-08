@@ -10,7 +10,7 @@ Fish-landia is a game written in Lua and ran with LOVE2D. The goal of the game i
 
 ## How to get started
 
-You can download the .zip file and extract to a preffered location. Then download and install love2d. Once you have done these two steps, you can simply drag the game file onto the love2d application to start playing.
+You can download the .zip file and extract to a preffered location. Then download and install love2d (https://love2d.org/#download). Once you have done these two steps, you can simply drag the game file onto the love2d application to start playing.
 
 ## Why make this game?
 

@@ -1,6 +1,6 @@
 # Fish-landia
 
-![Alt text](README_IMAGES/Start.png)
+![Alt text](README_IMAGES/Start.PNG)
 
 Fish-landia is a game written in Lua and ran with LOVE2D. The goal of the game is to catch every type of fish, whilst fighting off evil slimes. In doing so, the game will end and bring you to a screen that shows off some interesting stats about your playthrough. In addition to catching every type of fish, dying from slimes will also end the game and bring you to a screen that shows the same interesting stats.
 
@@ -18,17 +18,17 @@ All of the graphics and sounds are made by myself with the help of a pixel art p
 
 ## UI
 
-![Alt text](README_IMAGES/Play.png)
+![Alt text](README_IMAGES/Play.PNG)
 
 Most of the UI is interactable via the mouse, and clickable items change transparency when the mouse is hovering over said items. Initially the clickable items are slightly transparent in order to not obscure and take over the available screen. There are four clickable items on the play screen, "shop", "sell", trophy symbol (achievements), and "quit".
 
 When "shop" is clicked, the screen displays a shop with options to buy more advanced lures than the basic one provided at start as well as the option to buy health with a "buy" button that is displayed red when the player doesn't have enough money and gold when the player can afford them. There is an "exit" button on the top left that brings the player out of the shop. This "exit" button is in the same location in the achievements and performs the same. 
 
-![Alt text](README_IMAGES/Shop.png)
+![Alt text](README_IMAGES/Shop.PNG)
 
 When the trophy symbol is clicked, the screen displays a grid of fish shadows that are colored as each fish is caught as well as a completion percentage that increases as new fish are caught. When "sell" is clicked, the fish that the player is holding on to are sold and a graphic appears above the player's money was gained. When the "quit" button is clicked, the game closes.
 
-![Alt text](README_IMAGES/Achievements.png)
+![Alt text](README_IMAGES/Achievements.PNG)
 
 In addition to the clickable items, there are non clickable items, day/night cycle indicator, tutorial messages, and usage messages.
 

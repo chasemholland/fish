@@ -50,7 +50,7 @@ function Play:enter(params)
     self.catch_timer = 0
 
     -- timer to trigger night time
-    self.night_timer = CYCLE / 2
+    self.night_timer = 5 --CYCLE / 2
 
     -- night flag
     self.night = false
@@ -237,18 +237,16 @@ function Play:update(dt)
         Timer.after(8, function()
             self.player.tutorial[9] = true
         end)
-        Timer.update(dt)
     end
 
     -- show money gained
     if self.player.money_gained['value'] > 0 then
-        Timer.tween(1, {
+        Timer.tween(.5, {
             [self.player.money_gained] = {alpha = 0}
         }):finish(function()
             self.player.money_gained['value'] = 0
             self.player.money_gained['alpha'] = 255
         end)
-        Timer.update(dt)
     end
 
     -- update the player

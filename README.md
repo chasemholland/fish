@@ -57,6 +57,16 @@ The player's movement is comprised of a walk speed and four sprites for each dir
 
 The player's inventory is a container with a current lure type, which lures are owned, money, which fish have been caught and which fish are currently on hand (displayed at the bottom of the screen). These variables are used to determine which area can be fished, what fish can be caught, what the player can afford in the shop, and the player's completion progress.
 
+## Fishing Mechanic
+
+The fishing mechanic starts with the player casting the rod. Then there is a random chance that a fish will be hooked via a timer. Once a fish is hooked, a type of fish is randomly chosen based on the players hook and the area the player is fishing. Some graphics pop up on the bottom left hand side of the screen which visualize reeeling the fish in. There is a bar that a fish moves up and down in and a red box that is controlled via the player clicking and or holding the right mouse button. Next to this bar is another one that fills based on the time of the overlapping the red box and the fish. When this bar is full, the fish is caught. Next to this bar is yet another one that fills based on time that the red box and fish are not overlapping. When this bar is full, the fish breaks loose.
+
+### Soon to catch
+![Alt text](README_IMAGES/Catch.PNG)
+
+### Soon to break away
+![Alt text](README_IMAGES/BreakAway.PNG)
+
 ## The Slimes
 
 ![Alt text](graphics/enemies.png)

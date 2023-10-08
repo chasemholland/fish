@@ -58,6 +58,8 @@ The player's inventory is a container with a current lure type, which lures are 
 
 The slimes are contained in a table and only spawn at night in the river and ocean areas. While it is day or the player is in the starting area, the slimes are forced to idle. When it turns night and the player is in the river or ocean area, the slimes go to their walking state which consists of moving a certain distance in the direction they are facing then randomly chosing a new direction once they stop. The movement animation is similar to the player's movement in that each color slime has multiple sprites for each direction that are switched between with a timer.
 
+![Alt text](README_IMAGES/Night.PNG)
+
 A random number of slimes are spawned indeffinately on a timer during night if the player is in the river or ocean area. If the player is not in the area or it is daytime, the spawn timer is not active.
 
 If the slimes collide with a wall they stop and turn in the oppsite direction. When they collide with the player, they stop moving and the player is damaged and knocked back. Shortly after the player is knocked back, the slime will go back to moving. When player hits a slime with their sword, the slime stops moving and is knocked back, shortly after they resume their movement.

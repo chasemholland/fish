@@ -28,6 +28,8 @@ The day/night cycle displays whether it is day or night via text and a progress 
 
 ## The Player
 
+![Alt text](graphics/player.png)
+
 The player is a simlpe fisherman equiped with a pole and a sword with one one goal, catch every fish possible. He is first spawned in a starting location with a river hidden hidden to the left an ocean hiddien to the right. A simple and straight forward tutorial in the form of messages appear in the top left of the screen that explain how to play and the goal of the game. This tutorial is optional via a check box on the start screen, due to the possibility of death and having to start over.
 
 The player's movement is comprised of a walk speed and four sprites for each direction. The movement is achieved via timers that switch between which sprite is drawn depending on how much time has elapsed. Similar to walking, casting the rod and swinging the sword are achieved with multiple sprites for each direction which change via timers. The cast distance is determined by how long the left mouse button is held down and given a maximum value so as to not cast beyond the screen. A bobber is drawn at the end of the line and bobs up and down via a Knife library timer. In addition to a maximum power, casting anywhere other than water results in the player reverting back to idle. The sword hit box is variable depending on the direction the player is facing and this is to account for the change in sprite width and to create a more 3D feel to fighting. 

@@ -63,7 +63,6 @@ function Enemies:update(dt)
             self:knockBack()
             self.hurt['shifted'] = true
         end
-        Timer.update(dt)
         if self.timer > 2 then
             self.hurt['hit'] = false
             self.hurt['shifted'] = false

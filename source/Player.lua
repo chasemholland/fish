@@ -57,6 +57,25 @@ function Player:init(def)
     -- cast strength
     self.power = 0
 
+    -- bobber position
+    self.Bobber = {
+        ['x'] = 0,
+        ['y'] = 0,
+        ['bobbing'] = false,
+    }
+
+    Timer.every(.8, function()
+        Timer.tween(.2, {
+            [self.Bobber] = {y = self.Bobber['y'] + 2}
+        }):finish(function ()
+            Timer.after(.2, function()
+                Timer.tween(.2, {
+                    [self.Bobber] = {y = self.Bobber['y'] - 2}
+                })
+            end)
+        end)
+    end)
+
     -- timer
     self.timer = 0
 
@@ -69,7 +88,7 @@ function Player:init(def)
             ['amateur'] = false,
             ['advanced'] = false
         },
-        ['money'] = 0,
+        ['money'] = 16000,
         ['fish'] = {
             [1] = nil,
             [2] = nil,
@@ -165,7 +184,6 @@ function Player:update(dt)
             self:knockBack()
             self.hurt['shifted'] = true
         end
-        Timer.update(dt)
         if self.timer > 2 then
             self.hurt['hit'] = false
             self.hurt['shifted'] = false
@@ -173,6 +191,52 @@ function Player:update(dt)
         end
     end
 
+    -- set the bobber position if cast is true
+    if self.cast then
+        if not self.Bobber['bobbing'] then
+            self:getBobber()
+        end
+    else
+        self.Bobber['bobbing'] = false
+    end
+
+end
+
+function Player:getBobber()
+
+    if self.frame == PLAYER_FISH_LEFT then
+
+        self.Bobber = {
+            ['x'] = ((self.x + POLE_TIP_LEFT[1]) - self.power - 4),
+            ['y'] = (self.y + 64)
+        }
+        self.Bobber['bobbing'] = true
+
+    elseif self.frame == PLAYER_FISH_RIGHT then
+
+        self.Bobber = {
+            ['x'] = ((self.x + POLE_TIP_RIGHT[1]) + self.power - 4),
+            ['y'] = (self.y + 64)
+        }
+        self.Bobber['bobbing'] = true
+
+    elseif self.frame == PLAYER_FISH_UP then
+
+        self.Bobber = {
+            ['x'] = (self.x + POLE_TIP_UP[1] - 4),
+            ['y'] = ((self.y + POLE_TIP_UP[2]) - self.power)
+        }
+        self.Bobber['bobbing'] = true
+
+    elseif self.frame == PLAYER_FISH_DOWN then
+
+        self.Bobber = {
+            ['x'] = (self.x + 32 - 4),
+            ['y'] = ((self.y + POLE_TIP_DOWN[2]) + self.power)
+        }
+        self.Bobber['bobbing'] = true
+
+    end
 end
 
 -- change the player state when called
@@ -186,7 +250,7 @@ function Player:hurtTimer(dt)
 
 end
 
-function Player:render()
+function Player:render(dt)
 
     if self.hurt['hit'] then
         love.graphics.setColor(1, 0, 0, self.hurt['alpha'] / 255)
@@ -204,29 +268,33 @@ function Player:render()
         love.graphics.setLineWidth(1)
         if self.frame == PLAYER_FISH_LEFT then
             -- line
-            love.graphics.line(self.x + POLE_TIP_LEFT[1], self.y + POLE_TIP_LEFT[2], (self.x + POLE_TIP_LEFT[1]) - self.power, self.y + 64)
+            love.graphics.line(self.x + POLE_TIP_LEFT[1], self.y + POLE_TIP_LEFT[2], self.Bobber['x'] + 4, math.floor(self.Bobber['y']))
             -- bobber
-            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], (self.x + POLE_TIP_LEFT[1]) - self.power - 4, self.y + 64)
+            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], self.Bobber['x'], math.floor(self.Bobber['y']))
+
         elseif self.frame == PLAYER_FISH_RIGHT then
             -- line
-            love.graphics.line(self.x + POLE_TIP_RIGHT[1], self.y + POLE_TIP_RIGHT[2], (self.x + POLE_TIP_RIGHT[1]) + self.power, self.y + 64)
+            love.graphics.line(self.x + POLE_TIP_RIGHT[1], self.y + POLE_TIP_RIGHT[2], self.Bobber['x'] + 4, math.floor(self.Bobber['y']))
             -- bobber
-            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], (self.x + POLE_TIP_RIGHT[1]) + self.power - 4, self.y + 64)
+            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], self.Bobber['x'], math.floor(self.Bobber['y']))
+
         elseif self.frame == PLAYER_FISH_UP then
+            local Bobber = ((self.y + POLE_TIP_UP[2]) - self.power)
             -- line
-            love.graphics.line(self.x + POLE_TIP_UP[1], self.y + POLE_TIP_UP[2], self.x + POLE_TIP_UP[1], (self.y + POLE_TIP_UP[2]) - self.power)
+            love.graphics.line(self.x + POLE_TIP_UP[1], self.y + POLE_TIP_UP[2], self.Bobber['x'] + 4, math.floor(self.Bobber['y']))
             -- bobber
-            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], self.x + POLE_TIP_UP[1] - 4, (self.y + POLE_TIP_UP[2]) - self.power)
-            -- draw player last so pleyer is on top of the line and bobber
+            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], self.Bobber['x'], math.floor(self.Bobber['y']))
+            -- draw player last so player is on top of the line and bobber
             love.graphics.draw(SpriteSheet['fish'], Sprites['player'][self.frame], self.x, self.y)
+
         elseif self.frame == PLAYER_FISH_DOWN then
             -- line
-            love.graphics.line(self.x + POLE_TIP_DOWN[1], self.y + POLE_TIP_DOWN[2], self.x + 32, (self.y + POLE_TIP_DOWN[2]) + self.power)
+            love.graphics.line(self.x + POLE_TIP_DOWN[1], self.y + POLE_TIP_DOWN[2], (self.Bobber['x'] + 4), math.floor(self.Bobber['y']))
             -- bobber
-            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], self.x + 32 - 4, (self.y + POLE_TIP_DOWN[2]) + self.power)
+            love.graphics.draw(SpriteSheet['fish'], Sprites['items'][1], self.Bobber['x'], math.floor(self.Bobber['y']))
+
         end
     end
-
 end
 
 function Player:knockBack()

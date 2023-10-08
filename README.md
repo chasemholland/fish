@@ -1,6 +1,6 @@
 # Fish-landia
 
-Fish-landia is a game written in lua and ran with LOVE2D. The goal of the game is to catch every type of fish, whilst fighting off evil slimes. In doing so, the game will end and bring you to a screen that shows off some interesting stats about your playthrough. In addition to catching every type of fish, dying from slimes will also end the game and bring you to a screen that shows the same interesting stats.
+Fish-landia is a game written in Lua and ran with LOVE2D. The goal of the game is to catch every type of fish, whilst fighting off evil slimes. In doing so, the game will end and bring you to a screen that shows off some interesting stats about your playthrough. In addition to catching every type of fish, dying from slimes will also end the game and bring you to a screen that shows the same interesting stats.
 
 ## How to get started
 
@@ -36,10 +36,14 @@ The player's inventory is a container with a current lure type, which lures are 
 
 ## The Slimes
 
+![Alt text](graphics/enemies.png)
+
 The slimes are contained in a table and only spawn at night in the river and ocean areas. While it is day or the player is in the starting area, the slimes are forced to idle. When it turns night and the player is in the river or ocean area, the slimes go to their walking state which consists of moving a certain distance in the direction they are facing then randomly chosing a new direction once they stop. The movement animation is similar to the player's movement in that each color slime has multiple sprites for each direction that are switched between with a timer.
 
 A random number of slimes are spawned indeffinately on a timer during night if the player is in the river or ocean area. If the player is not in the area or it is daytime, the spawn timer is not active.
 
 If the slimes collide with a wall they stop and turn in the oppsite direction. When they collide with the player, they stop moving and the player is damaged and knocked back. Shortly after the player is knocked back, the slime will go back to moving. When player hits a slime with their sword, the slime stops moving and is knocked back, shortly after they resume their movement.
+
+The knockback for the slimes and the player is achieved via Knife library timers that in the case of left/right collision tween the "y" coordinate up and back to the original "y" coordinate as the "x" coordinate is tweened a certain distance and in the case of top/bottom collision tween the "y" coordinate a certain distance.
 
 Depeneding on color, the slimes have dirrenet amounts of health. When the slimes are killed they award the player with a variably random amount of money based on the color of slime.

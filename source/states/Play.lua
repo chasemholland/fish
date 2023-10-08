@@ -50,7 +50,7 @@ function Play:enter(params)
     self.catch_timer = 0
 
     -- timer to trigger night time
-    self.night_timer = 5 --CYCLE / 2
+    self.night_timer = CYCLE / 2
 
     -- night flag
     self.night = false
